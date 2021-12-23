@@ -1,5 +1,5 @@
 package towerdef;
-
+//test
 public class BloodSpot {
 	public int x,y, rotation; 
 	public double animX, animY;
