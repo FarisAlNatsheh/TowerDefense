@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class Enemy {
 	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 21;
-	public double  animX, animY, anim;
+	public double  animX, animY, anim, speedX= Main.tileWidth/30, speedY = Main.tileHeight/30;
 	public BufferedImage texture = Main.enemyTexture[0][7];
 	//0 left 9
 	//1 up 8
@@ -89,24 +89,23 @@ public class Enemy {
 
 	}
 	public void move() {
-
 		boolean dec = false;
 		if(dir == 3) { 
 			dec = false;
-			animY+= speed;
+			animY+= speedY;
 		}
 		else if(dir == 2) {
 			dec = false;
-			animX+= speed;
+			animX+= speedX;
 		}
 		else if(dir == 0) {
 			dec = true;
-			animX-= speed;
+			animX-= speedX;
 		}
 
 		else if(dir == 1) {
 			dec = true;
-			animY-= speed;
+			animY-= speedY;
 		}
 
 		if(!dec) {

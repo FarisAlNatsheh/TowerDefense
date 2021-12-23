@@ -9,6 +9,7 @@ public class Menu {
 
 	BufferedImage[] bldTexture;
 	public int anim = 0;
+	public int size=Main.tileWidth*2;
 	public Menu() {
 		initializeTexture();
 	}
@@ -21,7 +22,7 @@ public class Menu {
 		g2.setColor(new Color(255,0,0,70));
 		g2.fillRect(0, 0, Main.winWidth, Main.winHeight);
 		g2.drawImage(bldTexture[anim], 0, 0, Main.winWidth, Main.winHeight,null);
-		Main.builder.drawString(g2, "YOU DIED", Main.winWidth/2-400, Main.winHeight/2-50, 100);
+		Main.builder.drawString(g2, "YOU DIED", Main.winWidth/2-4*size, Main.winHeight/2-50, size);
 	}
 	public void initializeTexture() {
 		BufferedImage sheet = null;
@@ -31,5 +32,8 @@ public class Menu {
 		for(int i = 0; i < 16; i++) {
 				bldTexture[i] = sheet.getSubimage(i*430,  0, 430,sheet.getHeight());
 		}
+	}
+	public void readjust() {
+		size=Main.tileWidth*2;
 	}
 }

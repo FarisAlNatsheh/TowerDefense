@@ -17,8 +17,8 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Main extends JFrame{
 	static int tick, tps, playerHealth = 100, playerMoney = 100;
-	static int winHeight = 1080;
-	static int winWidth = 1280;
+	static int winHeight = 900;
+	static int winWidth = 900;
 	static int gridHeight = 13;
 	static int gridWidth = 21;
 	static int tileHeight = winHeight/gridHeight;
@@ -37,6 +37,7 @@ public class Main extends JFrame{
 	Menu menu;
 	boolean stop;
 	public Main() {
+		System.out.println(tileHeight);
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				//System.out.println("Resized to " + e.getComponent().getSize());
@@ -44,12 +45,22 @@ public class Main extends JFrame{
 				winHeight = getHeight();
 				tileHeight = winHeight/gridHeight;
 				tileWidth = winWidth/gridWidth;
+				
 				for(Tower k : towers) {
 					k.width = Main.tileWidth;
 					k.height = Main.tileHeight;
 					k.x = k.mapX * Main.tileWidth+Main.tileWidth/2;
 					k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
 				}
+				for(Enemy k : bloons) {
+					
+					k.speedX = tileWidth/30;
+					k.speedY = tileHeight/30;
+				}
+				try {
+					menu.readjust();
+				}
+				catch(Exception e1) {}
 			}
 		});
 		addMouseListener(new MouseAdapter() {
@@ -112,8 +123,8 @@ public class Main extends JFrame{
 		setVisible(true);
 	}
 	public void game(Graphics g) {
-		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth);
-		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileWidth, tileWidth);
+		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
+		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileWidth/2, tileWidth/2);
 
 		if(playerHealth <= 0) {
 			playerHealth = 0;
