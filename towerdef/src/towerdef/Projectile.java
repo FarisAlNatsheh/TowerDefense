@@ -2,7 +2,7 @@ package towerdef;
 
 import java.awt.Graphics;
 
-public class Projectile extends Entities{
+public class Projectile{
 	public double x,y,mapX, mapY;
 	Enemy target;
 	double speedX = Main.tileWidth/2, speedY= Main.tileHeight/2;
