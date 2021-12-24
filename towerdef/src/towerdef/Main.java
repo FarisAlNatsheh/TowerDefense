@@ -205,7 +205,7 @@ public class Main extends JFrame{
 		for(int i = 0; i < gridHeight; i++) {
 			for(int j = 0; j < gridWidth; j++) {
 				if(map[j][i] == 0) {
-					g.drawImage(textures[9][1],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+					//g.drawImage(textures[9][1],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
 				}
 				else if(map[j][i] == 1){
 					g.drawImage(textures[9][17],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
