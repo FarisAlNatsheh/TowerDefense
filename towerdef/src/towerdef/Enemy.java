@@ -1,8 +1,10 @@
 package towerdef;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Enemy {
+public class Enemy extends Entity{
 	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 21;
 	public double  animX, animY, anim, speedX= Main.tileWidth/30, speedY = Main.tileHeight/30;
 	public BufferedImage texture = Main.enemyTexture[0][7];
@@ -143,5 +145,13 @@ public class Enemy {
 			move();
 		}
 		
+	}
+	public void draw(Graphics g) {
+		g.drawImage(texture, Main.tileWidth*X+(int)animX , Main.tileHeight*Y+(int)animY, Main.tileWidth, Main.tileHeight, null);
+		g.setColor(new Color(0,0,0));
+		g.fillRect(Main.tileWidth*X+(int)animX + Main.tileWidth/3 , Main.tileHeight*Y+(int)animY + Main.tileHeight, Main.tileWidth/3, 5);
+		g.setColor(new Color(120,0,0));
+		g.fillRect(Main.tileWidth*X+(int)animX + Main.tileWidth/3 , Main.tileHeight*Y+(int)animY + Main.tileHeight, (int)(Main.tileWidth/3*(1.0*health/maxHealth)), 5);
+		g.setColor(new Color(0,0,0));
 	}
 }

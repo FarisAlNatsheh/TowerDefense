@@ -17,8 +17,8 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Main extends JFrame{
 	static int tick, tps, playerHealth = 100, playerMoney = 100;
-	static int winHeight = 900;
-	static int winWidth = 900;
+	static int winHeight = 720;
+	static int winWidth = 1280;
 	static int gridHeight = 13;
 	static int gridWidth = 21;
 	static int tileHeight = winHeight/gridHeight;
@@ -33,11 +33,13 @@ public class Main extends JFrame{
 	ArrayList<Enemy> bloons = new ArrayList<Enemy>();
 	ArrayList<Tower> towers = new ArrayList<Tower>();
 	ArrayList<BloodSpot> bloodSpots = new ArrayList<BloodSpot>();
-	int targetTPS= 70, delay = 1;
+	ArrayList<Entity> entities = new ArrayList<Entity>();
+	long time;
+	int delay , targetTPS = 60;
 	Menu menu;
 	boolean stop;
 	public Main() {
-		System.out.println(tileHeight);
+		initializeMap();
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				//System.out.println("Resized to " + e.getComponent().getSize());
@@ -45,7 +47,7 @@ public class Main extends JFrame{
 				winHeight = getHeight();
 				tileHeight = winHeight/gridHeight;
 				tileWidth = winWidth/gridWidth;
-				
+
 				for(Tower k : towers) {
 					k.width = Main.tileWidth;
 					k.height = Main.tileHeight;
@@ -53,7 +55,6 @@ public class Main extends JFrame{
 					k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
 				}
 				for(Enemy k : bloons) {
-					
 					k.speedX = tileWidth/30;
 					k.speedY = tileHeight/30;
 				}
@@ -89,10 +90,10 @@ public class Main extends JFrame{
 		menu = new Menu();
 		JPanel game;
 		//bloons.add(new Enemy(3,1,3));
+		startTime = System.currentTimeMillis();
 
 		game = new JPanel() {
 			public void paint(Graphics g) {
-
 				startTime = System.currentTimeMillis();
 				try {Thread.sleep(delay);} 
 				catch (InterruptedException e) {}
@@ -103,7 +104,7 @@ public class Main extends JFrame{
 				tick++;
 				tps++;
 				if(!stop) {
-					game(g);
+					game();
 				}
 				else {
 
@@ -122,9 +123,8 @@ public class Main extends JFrame{
 		add(game);
 		setVisible(true);
 	}
-	public void game(Graphics g) {
-		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
-		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileWidth/2, tileWidth/2);
+	public void game() {
+		checkCollisions();
 
 		if(playerHealth <= 0) {
 			playerHealth = 0;
@@ -156,6 +156,7 @@ public class Main extends JFrame{
 					if(k.projectiles.size() > 0)
 						k.projectiles = new ArrayList<Projectile>();*/
 		}
+
 	}
 	public int rand(int min, int max) {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
@@ -200,6 +201,23 @@ public class Main extends JFrame{
 		}
 	} 
 	public void drawGrid(Graphics g) {
+		g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
+		for(int i = 0; i < gridHeight; i++) {
+			for(int j = 0; j < gridWidth; j++) {
+				if(map[j][i] == 0) {
+					g.drawImage(textures[9][1],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+				else if(map[j][i] == 1){
+					g.drawImage(textures[9][17],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+				else if(map[j][i] == 2){
+					g.drawImage(textures[3][16],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+			}
+		}
+
+	}
+	public void initializeMap() {
 		for(int i = 0; i < 3; i++) {
 			map[3][i] = 1;
 		}
@@ -220,93 +238,19 @@ public class Main extends JFrame{
 		}
 		map[(gridWidth)/2+1][12] = 1;
 		map[(gridWidth)/2+1][11] = 2;
-
-		g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
-		for(int i = 0; i < gridHeight; i++) {
-			for(int j = 0; j < gridWidth; j++) {
-				if(map[j][i] == 0) {
-					//g.drawImage(textures[9][1],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-				else if(map[j][i] == 1){
-					g.drawImage(textures[9][17],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-				else if(map[j][i] == 2){
-					g.drawImage(textures[3][16],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-			}
-		}
-
 	}
-
 	public void drawEnts(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
-		double x = 0, y = 0;
-
-		for(BloodSpot k: bloodSpots) {
-			g2.drawImage(blood, tileWidth*k.x+(int)k.animX , tileHeight*k.y+(int)k.animY, tileWidth, tileHeight, null);
+		for(Entity k: bloodSpots) {
+			k.draw(g);
 		}
-		for(Enemy enemy : bloons) {
-			g.drawImage(enemy.texture, tileWidth*enemy.X+(int)enemy.animX , tileHeight*enemy.Y+(int)enemy.animY, tileWidth, tileHeight, null);
-			g.setColor(new Color(0,0,0));
-			g.fillRect(tileWidth*enemy.X+(int)enemy.animX + tileWidth/3 , tileHeight*enemy.Y+(int)enemy.animY + tileHeight, tileWidth/3, 5);
-			g.setColor(new Color(120,0,0));
-			g.fillRect(tileWidth*enemy.X+(int)enemy.animX + tileWidth/3 , tileHeight*enemy.Y+(int)enemy.animY + tileHeight, (int)(tileWidth/3*(1.0*enemy.health/enemy.maxHealth)), 5);
-			g.setColor(new Color(0,0,0));
+		for(Entity k : bloons) {
+			k.draw(g);
 		}
-		for(Tower s : towers) {
-
-			for(Projectile k : s.projectiles) {
-				double angle = 0;
-				angle = k.angle;
-				x = k.x;
-				y = k.y;
-				g2.rotate(angle, k.x,k.y);
-				g2.drawImage(projectileImg,(int)k.x, (int)k.y, k.width, k.height,null);
-				g2.rotate(angle * -1, x,y);
-			}
-			//angle = 0;
-
-			if(s.initialYdif > 0) {
-
-				if(s.angle < 0) {
-					g2.rotate(s.angle, s.x,s.y);
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-					g2.rotate(s.angle*-1, s.x,s.y);
-				}
-				else {
-					g2.rotate(s.angle+ Math.PI, s.x,s.y);
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-					g2.rotate((s.angle+ Math.PI)*-1, s.x,s.y);
-				}
-			}
-			else if(s.initialYdif < 0) {
-				if(s.angle > 0) {
-					g2.rotate(s.angle, s.x,s.y);
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-					g2.rotate(s.angle*-1, s.x,s.y);
-				}
-				else {
-					g2.rotate(s.angle+ Math.PI, s.x,s.y);
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-					g2.rotate((s.angle+ Math.PI)*-1, s.x,s.y);
-				}
-			}
-			else if(s.initialYdif == 0) {
-				if(s.initialXdif < 0)
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-				else {
-					g2.rotate(Math.PI, s.x,s.y);
-					g.drawImage(towerImg,s.x-s.width/2,s.y-s.height/2,s.width,s.height,null);
-					g2.rotate(Math.PI*-1, s.x,s.y);
-				}
-			}
+		for(Entity k : towers) {
+			k.draw(g);
 		}
-
-
-
-
-
-		//System.out.println(Math.toDegrees(angle));
+		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
+		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileWidth/2, tileWidth/2);
 	}
 	public void initializeTextures() {
 		BufferedImage sheet = null;
