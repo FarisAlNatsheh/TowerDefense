@@ -5,13 +5,17 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Enemy extends Entity{
-	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 21;
+	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 10;
 	public double  animX, animY, anim, speedX= Main.tileWidth/30, speedY = Main.tileHeight/30;
 	public BufferedImage texture = Main.enemyTexture[0][7];
+	
+	//Texture & Movement flags directions
+	
 	//0 left 9
 	//1 up 8
 	//2 right 11
 	//3 down 10
+	
 	public Enemy(int startX, int startY, int startDir, int health) {
 		this.X = startX;
 		this.Y = startY;
@@ -20,6 +24,7 @@ public class Enemy extends Entity{
 		maxHealth = health;
 	
 	}
+	
 	public void checkSurr() {
 		switch(dir) {
 		case 0: 	
@@ -88,8 +93,9 @@ public class Enemy extends Entity{
 			}
 			break;
 		}
-
+		
 	}
+	//Rotate and change texture based on surroundings
 	public void move() {
 		boolean dec = false;
 		if(dir == 3) { 
@@ -131,14 +137,15 @@ public class Enemy extends Entity{
 			}
 		}
 	}
+	//Updates location of the enemy on the map
+	
 	public void run() {
 		double animSpeed = 0.3;
 		anim+= animSpeed;
 		if(anim >= 8)
 			anim = 0;
+		//Runs animation
 		
-		
-			
 		texture = Main.enemyTexture[(int)anim][textureDir];
 		if(X < Main.gridWidth-1 && Y < Main.gridHeight-1) {
 			checkSurr();
@@ -146,6 +153,8 @@ public class Enemy extends Entity{
 		}
 		
 	}
+	//Run enemy methods
+	
 	public void draw(Graphics g) {
 		g.drawImage(texture, Main.tileWidth*X+(int)animX , Main.tileHeight*Y+(int)animY, Main.tileWidth, Main.tileHeight, null);
 		g.setColor(new Color(0,0,0));
@@ -154,4 +163,5 @@ public class Enemy extends Entity{
 		g.fillRect(Main.tileWidth*X+(int)animX + Main.tileWidth/3 , Main.tileHeight*Y+(int)animY + Main.tileHeight, (int)(Main.tileWidth/3*(1.0*health/maxHealth)), 5);
 		g.setColor(new Color(0,0,0));
 	}
+	//Draw enemies on screen
 }

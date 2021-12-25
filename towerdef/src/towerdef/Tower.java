@@ -1,5 +1,6 @@
 package towerdef;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -11,10 +12,12 @@ public class Tower extends Entity{
 	public int mapY;
 	public int width = Main.tileWidth;
 	public int height = Main.tileHeight;
-	int speed = 10;
+	int speed = 10; //per how many ticks
 	double initialXdif;
 	double initialYdif;
 	double angle;
+	double range = 2;
+	static double defaultRange = 2;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public Tower(int x, int y) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;
@@ -22,29 +25,86 @@ public class Tower extends Entity{
 		mapX = x;
 		mapY = y;
 	}
-	
-	public void fire(Enemy target) {
-		initialXdif = (target.X)*Main.tileWidth+target.animX+Main.tileWidth/2 - x;
-		initialYdif = (target.Y)*Main.tileHeight+target.animY+Main.tileHeight/2 - y;
-		angle = Math.atan((double)initialYdif/initialXdif);
-		if(Main.tick % speed == 0)
-			projectiles.add(new Projectile(x,y, target, 3,0));
+	public Enemy checkTarget() {
+		for(Enemy k: Main.enemies) 
+			for(int i = mapY-(int)range; i <= mapY+range; i++) 
+				for(int j = mapX-(int)range; j <= mapX+range; j++) 
+					if(k.X == j && k.Y == i) {
+						return k;
+					}
+
+		return null;
+		
 	}
+	//Checks for target in a square around the tower
+	
+	public Enemy checkTargetOval() {
+		for(Enemy k: Main.enemies) {
+			if(Math.abs(k.X*Main.tileWidth+Main.tileWidth/2+k.animX-x)/Main.tileWidth <= range && 
+			   Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y)/Main.tileHeight <= range)
+				return k;
+			//System.out.println(Math.abs( k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-(y+Main.tileHeight/2) )/Main.tileHeight);
+		}
+		return null;
+	}
+	//Checks for target in a circle around the tower
+	
+	public void drawAim(Graphics g) {
+		g.setColor(Color.BLACK);
+		for(Enemy k: Main.enemies) {
+			if(Math.abs(k.X*Main.tileWidth+Main.tileWidth/2+k.animX-x) <= range*Main.tileWidth && 
+			   Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y) <= range*Main.tileHeight	)
+				g.drawLine(x, y, k.X*Main.tileWidth+Main.tileWidth/2+(int)k.animX, k.Y*Main.tileHeight+Main.tileHeight/2+(int)k.animY);
+		}
+	}
+	//Draws lines between enemies of tower and the tower itself
+	
+	public void fire() {
+		Enemy target = checkTargetOval();
+		//Range option
+		
+		if(target != null) {
+			initialXdif = (target.X)*Main.tileWidth+target.animX+Main.tileWidth/2 - x;
+			initialYdif = (target.Y)*Main.tileHeight+target.animY+Main.tileHeight/2 - y;
+			angle = Math.atan((double)initialYdif/initialXdif);
+			//Calculate angle
+			
+			if(Main.tick % speed == 0)
+				projectiles.add(new Projectile(x,y, target, 10,0));
+			//Create new projectile at the towers location
+		}
+	}
+	//Create projectile with conditions
+	
+	public void drawRange(Graphics2D g, boolean oval) {
+		if(!oval) {
+			for(int i = mapY-(int)range; i <= mapY+range; i++) {
+				for(int j = mapX-(int)range; j <= mapX+range; j++) {
+					g.setColor(Color.YELLOW);
+					g.drawRect(j*Main.tileWidth, i*Main.tileHeight, Main.tileWidth, Main.tileHeight);
+				}
+			}
+		}
+		else {
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mapX-range)*Main.tileWidth), (int)((mapY-range)*Main.tileHeight), (int) ((range*2+1)*Main.tileWidth), (int)((range*2+1)*Main.tileHeight));
+		}
+		g.drawOval((int)((mapX-range)*Main.tileWidth), (int)((mapY-range)*Main.tileHeight), (int)((range*2+1)*Main.tileWidth), (int)((range*2+1)*Main.tileHeight));
+
+	}
+	//Draw the range around the tower (used when building towers)
+	
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		
+		//drawRange(g2, true);
+		//drawAim(g);
+		////To be implemented
 		for(Projectile k : projectiles) {
-			double x = 0, y = 0;
-			double angle = 0;
-			angle = k.angle;
-			x = k.x;
-			y = k.y;
-			g2.rotate(angle, k.x,k.y);
-			g2.drawImage(Main.projectileImg,(int)k.x, (int)k.y, k.width, k.height,null);
-			g2.rotate(angle * -1, x,y);
+			k.draw(g);
 		}
+		//Draw projectiles of this tower
+		
 		if(initialYdif > 0) {
-
 			if(angle < 0) {
 				g2.rotate(angle, x,y);
 				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
@@ -77,6 +137,7 @@ public class Tower extends Entity{
 				g2.rotate(Math.PI*-1, x,y);
 			}
 		}
+		//Rotating the turret while compensating for the difference in negative and positive angles
 	}
-	
+
 }
