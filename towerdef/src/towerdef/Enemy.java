@@ -2,12 +2,13 @@ package towerdef;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class Enemy extends Entity{
 	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 10;
 	public double  animX, animY, anim, speedX= Main.tileWidth/30, speedY = Main.tileHeight/30;
-	public BufferedImage texture = Main.enemyTexture[0][7];
+	public BufferedImage texture = Main.enemyTexture[0];
 	
 	//Texture & Movement flags directions
 	
@@ -142,11 +143,12 @@ public class Enemy extends Entity{
 	public void run() {
 		double animSpeed = 0.3;
 		anim+= animSpeed;
-		if(anim >= 8)
+		if(anim >= 20)
 			anim = 0;
 		//Runs animation
 		
-		texture = Main.enemyTexture[(int)anim][textureDir];
+		texture = Main.enemyTexture[(int)anim];
+		//texture = Main.towerImg;
 		if(X < Main.gridWidth-1 && Y < Main.gridHeight-1) {
 			checkSurr();
 			move();
@@ -156,7 +158,20 @@ public class Enemy extends Entity{
 	//Run enemy methods
 	
 	public void draw(Graphics g) {
+		double angle = 0;
+		if(dir == 0)
+			angle = Math.PI;
+		else if(dir == 1)
+			angle = Math.PI/-2;
+		else if(dir == 2)
+			angle = 0;
+		else if(dir == 3)
+			angle = Math.PI/2;
+		Graphics2D g2 = (Graphics2D) g;
+		g2.rotate(angle, X*Main.tileWidth+animX+Main.tileWidth/2, Y*Main.tileHeight+animY+ Main.tileHeight/2);
 		g.drawImage(texture, Main.tileWidth*X+(int)animX , Main.tileHeight*Y+(int)animY, Main.tileWidth, Main.tileHeight, null);
+		g2.rotate((angle)*-1, X*Main.tileWidth+animX+Main.tileWidth/2, Y*Main.tileHeight+animY+ Main.tileHeight/2);
+
 		g.setColor(new Color(0,0,0));
 		g.fillRect(Main.tileWidth*X+(int)animX + Main.tileWidth/3 , Main.tileHeight*Y+(int)animY + Main.tileHeight, Main.tileWidth/3, 5);
 		g.setColor(new Color(120,0,0));

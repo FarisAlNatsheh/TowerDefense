@@ -58,7 +58,7 @@ public class Main extends JFrame{
 	static TextBuilder builder = new TextBuilder();
 	//for drawing strings with sprite font
 
-	static BufferedImage[][] enemyTexture, wizard;
+	static BufferedImage[] enemyTexture, wizard;
 	static BufferedImage projectileImg, blood, bgImg, towerImg, bloodAnim, buttonImg, menuBack, selection;
 	static BufferedImage[][] textures;
 	//textures
@@ -209,6 +209,7 @@ public class Main extends JFrame{
 		menu = new Menu();
 
 		JPanel game;
+		enemies.add(new Enemy(3,0,3,200));
 
 		game = new JPanel() {
 			public void paint(Graphics g) {
@@ -389,10 +390,10 @@ public class Main extends JFrame{
 					//g.drawImage(textures[18][6],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
 				}
 				else if(map[j][i] == 1){
-					g.drawImage(textures[9][17],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+					g.drawImage(textures[4][3],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
 				}
 				else if(map[j][i] == 2){
-					g.drawImage(textures[3][16],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+					g.drawImage(textures[0][0],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
 				}
 			}
 		}
@@ -448,20 +449,20 @@ public class Main extends JFrame{
 	public void initializeTextures() {
 		BufferedImage sheet = null;
 		try {
-			sheet = ImageIO.read(new File("textures.png"));
+			sheet = ImageIO.read(new File("texturess.png"));
 			projectileImg = ImageIO.read(new File("laser.png"));
 			blood = ImageIO.read(new File("blood.png"));
-			bgImg = ImageIO.read(new File("background.jpg"));
-			towerImg = ImageIO.read(new File("tower.png"));
+			bgImg = ImageIO.read(new File("background.png"));
+			towerImg = ImageIO.read(new File("cannon2.png"));
 			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
 			buttonImg = ImageIO.read(new File("button.png"));
-			menuBack = ImageIO.read(new File("menuback"+rand(1,4)+".png"));
+			menuBack = ImageIO.read(new File("menubackground.jpg"));
 			selection = ImageIO.read(new File("gradient.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		//Import sprites that arent in sheets or are initialized in other classes
-		int scale = 16;
+		int scale = 32;
 		int sheetHeight = sheet.getHeight(null)/scale;
 		int sheetWidth = sheet.getWidth(null)/scale;
 		textures = new BufferedImage[sheetWidth][sheetHeight];
@@ -471,21 +472,19 @@ public class Main extends JFrame{
 			}
 		}
 		try {
-			sheet = ImageIO.read(new File("zombie2.png"));
+			sheet = ImageIO.read(new File("spritesheet.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		scale = 64;
+		scale = 189;
 		sheetHeight = sheet.getHeight(null)/scale;
 		sheetWidth = sheet.getWidth(null)/scale;
-		enemyTexture = new BufferedImage[sheetWidth][sheetHeight];
+		enemyTexture = new BufferedImage[sheetWidth];
 		for(int i = 0; i < sheetWidth; i++) {
-			for(int i2 = 0; i2 < sheetHeight; i2++) {
-				enemyTexture[i][i2] = sheet.getSubimage(i * scale,  i2 * scale, scale,scale );
-			}
+				enemyTexture[i]= sheet.getSubimage(i * 195,  0, 195,189 );
 		}
 		//Cuts spirtesheets based on size and saves them into arrays of buffered images
-
+		
 
 
 
