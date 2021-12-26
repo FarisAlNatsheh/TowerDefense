@@ -69,8 +69,10 @@ public class Tower extends Entity{
 			angle = Math.atan((double)initialYdif/initialXdif);
 			//Calculate angle
 			
-			if(Main.tick % speed == 0)
+			if(Main.tick % speed == 0) {
 				projectiles.add(new Projectile(x,y, target, 10,0));
+				Main.soundEffect("laser4.wav"); //credit dklon
+			}
 			//Create new projectile at the towers location
 		}
 	}

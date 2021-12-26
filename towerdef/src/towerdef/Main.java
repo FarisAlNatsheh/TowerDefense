@@ -27,11 +27,11 @@ public class Main extends JFrame{
 
 	int mouseX, mouseY;
 	//Mouse location on screen
-	AudioInputStream audio;
-	Clip clip;
-	FloatControl volume;
-	FloatControl volumeEff;
-	int vol = -20;
+	static AudioInputStream audio;
+	static Clip clip;
+	static FloatControl volume;
+	static FloatControl volumeEff;
+	static int vol = -20;
 	boolean song = false;
 	//Audio variables
 
@@ -69,7 +69,7 @@ public class Main extends JFrame{
 
 
 	long startTime;
-	int delay , targetTPS = 60;
+	int delay , targetTPS = 70;
 	//delay before each frame (how often should the program tick)
 
 	Menu menu;
@@ -499,7 +499,7 @@ public class Main extends JFrame{
 			g.fillOval((int)((mouseX/tileWidth-Tower.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower.defaultRange)*Main.tileHeight), (int) ((Tower.defaultRange*2+1)*Main.tileWidth), (int)((Tower.defaultRange*2+1)*Main.tileHeight));
 		}
 	}
-	public void music(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it
+	public static void music(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it
 
 		try {
 			audio = AudioSystem.getAudioInputStream(new File(songName));
@@ -507,6 +507,21 @@ public class Main extends JFrame{
 			clip.open(audio);
 			clip.start();
 			clip.loop(clip.LOOP_CONTINUOUSLY);
+
+			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			volume.setValue(vol);
+		}
+		catch(Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+	public static void soundEffect(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it
+
+		try {
+			audio = AudioSystem.getAudioInputStream(new File(songName));
+			clip = AudioSystem.getClip();
+			clip.open(audio);
+			clip.start();
 
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			volume.setValue(vol);
