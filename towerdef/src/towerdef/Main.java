@@ -30,7 +30,7 @@ public class Main extends JFrame{
 	static AudioInputStream audio;
 	static Clip clip;
 	static FloatControl volume;
-	static FloatControl volumeEff;
+	static float volumeEff = -50;
 	static int vol = -20;
 	boolean song = false;
 	//Audio variables
@@ -154,12 +154,15 @@ public class Main extends JFrame{
 							return;
 					}
 					try {
-						if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1) {
+						if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
 							Tower tower = new Tower(mouseX, mouseY);
 							towers.add(tower);
 							placedTowers.add(new Dimension(mouseX, mouseY));
+							playerMoney-=50;
 							towerSelection = 0;
 						}
+						else
+							return;
 					}
 					catch(Exception e1) {};
 				}
@@ -175,12 +178,15 @@ public class Main extends JFrame{
 						return;
 				}
 				try {
-					if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1) {
+					if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
 						Tower tower = new Tower(mouseX, mouseY);
 						towers.add(tower);
 						placedTowers.add(new Dimension(mouseX, mouseY));
 						towerSelection = 0;
+						playerMoney-=50;
 					}
+					else
+						towerSelection = 0;
 				}
 				catch(Exception e1) {};
 			}
@@ -524,7 +530,7 @@ public class Main extends JFrame{
 			clip.start();
 
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue(vol);
+			volume.setValue(volumeEff);
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());
