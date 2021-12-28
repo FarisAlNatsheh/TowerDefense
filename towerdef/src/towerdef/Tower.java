@@ -18,6 +18,7 @@ public class Tower extends Entity{
 	double angle;
 	double range = 2;
 	static double defaultRange = 2;
+	int price = 50;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public Tower(int x, int y) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;

@@ -30,7 +30,7 @@ public class Main extends JFrame{
 	static AudioInputStream audio;
 	static Clip clip;
 	static FloatControl volume;
-	static float volumeEff = -50;
+	static float volumeEff = -30;
 	static int vol = -20;
 	boolean song = false;
 	//Audio variables
@@ -80,6 +80,8 @@ public class Main extends JFrame{
 
 	int towerSelection = 0;
 
+	StatWindow stats;
+	
 	public void reAdjust(){
 		tileHeight = winHeight/gridHeight;
 		tileWidth = winWidth/gridWidth;
@@ -108,6 +110,10 @@ public class Main extends JFrame{
 				winWidth = getWidth();
 				winHeight = getHeight();
 				reAdjust();
+				try {
+				stats.adjust();
+				}
+				catch(Exception e1) {}
 			}
 		});
 
@@ -143,6 +149,7 @@ public class Main extends JFrame{
 						if(mouseX/tileWidth == towers.get(i).mapX && mouseY/tileHeight == towers.get(i).mapY) {selectedTower = i+1;break;}
 						selectedTower = 0;
 					}
+					stats.click(e.getX(), e.getY(), selectedTower);
 					if(e.getButton() == MouseEvent.BUTTON3) {towerSelection = 0;}
 					int mouseX= e.getX()/tileWidth;
 					int mouseY= (e.getY()-31)/tileHeight;
@@ -166,6 +173,8 @@ public class Main extends JFrame{
 					}
 					catch(Exception e1) {};
 				}
+				
+
 			}
 			public void mouseReleased(MouseEvent e) {
 				int mouseX= e.getX()/tileWidth;
@@ -215,8 +224,9 @@ public class Main extends JFrame{
 		menu = new Menu();
 
 		JPanel game;
-		enemies.add(new Enemy(3,0,3,200));
-
+		//enemies.add(new Enemy(3,0,3,200));
+		stats = new StatWindow(12,8);
+		
 		game = new JPanel() {
 			public void paint(Graphics g) {
 				//Game loop
@@ -317,8 +327,8 @@ public class Main extends JFrame{
 		}
 		//Move projectiles and remove them if they go offscreen
 
-		if(tick % rand(1,1000) == 0)
-			enemies.add(new Enemy(3,0,3,200));
+		if(tick % 400 == 0)
+			enemies.add(new Enemy(3,0,3,100));
 		//Spawn enemies randomly between a certain tick interval
 
 		if(enemies.size() > 0 && towers.size()>0)
@@ -448,8 +458,10 @@ public class Main extends JFrame{
 		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
 		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
 		builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
-
+		
 		//Draw text
+		if(stats.visible)
+			stats.draw(g);
 	}
 
 	public void initializeTextures() {
@@ -511,11 +523,12 @@ public class Main extends JFrame{
 			audio = AudioSystem.getAudioInputStream(new File(songName));
 			clip = AudioSystem.getClip();
 			clip.open(audio);
+			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			volume.setValue(vol);
 			clip.start();
 			clip.loop(clip.LOOP_CONTINUOUSLY);
 
-			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue(vol);
+			
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());
@@ -527,10 +540,11 @@ public class Main extends JFrame{
 			audio = AudioSystem.getAudioInputStream(new File(songName));
 			clip = AudioSystem.getClip();
 			clip.open(audio);
-			clip.start();
-
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			volume.setValue(volumeEff);
+			clip.start();
+
+			
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());
