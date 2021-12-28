@@ -44,6 +44,8 @@ public class StatWindow extends Component{
 		g.drawImage(texture,x*Main.tileWidth, y*Main.tileHeight, width, height, null);
 		upgrade.draw(g);
 		sell.draw(g);
+		Main.builder.drawString(g, "Price: "+ Main.towers.get(selectedTower-1).price/2, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight,Main.tileWidth/5);
+
 	}
 	public void click(int mouseX, int mouseY, int selectedTower) {
 		if(selectedTower > 0) {
@@ -67,7 +69,7 @@ public class StatWindow extends Component{
 			if(Main.towers.get(this.selectedTower-1).speed > 1)
 				Main.towers.get(this.selectedTower-1).speed--;
 			Main.towers.get(this.selectedTower-1).range++;
-			Main.playerMoney-=25;
+			Main.playerMoney-=	Main.towers.get(this.selectedTower-1).price/2;
 			Main.towers.get(this.selectedTower-1).price+= 25;
 		}
 		
