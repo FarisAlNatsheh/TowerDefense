@@ -131,7 +131,9 @@ public class Main extends JFrame{
 							switch(i) {
 							case 0:
 								clip.stop();
-								menuSwitch = 1; music("Songgame.wav");return;
+								music("Songgame.wav");
+								menuSwitch = 1; 
+								return;
 							case 1:menuSwitch =  4;break;
 							case 2:
 								System.exit(1);break;
@@ -576,10 +578,11 @@ public class Main extends JFrame{
 			audio = AudioSystem.getAudioInputStream(new File(songName));
 			clip = AudioSystem.getClip();
 			clip.open(audio);
-			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue((float) vol);
 			clip.start();
 			clip.loop(clip.LOOP_CONTINUOUSLY);
+			
+			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			volume.setValue((float) vol);
 
 
 		}
