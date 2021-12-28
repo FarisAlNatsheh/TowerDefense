@@ -56,16 +56,16 @@ public class StatWindow extends Component{
 		
 		if(mouseX > sell.x &&
 				mouseX <= sell.x + sell.size*(sell.s.length()+2) &&
-				mouseY-31 > sell.y &&
-				mouseY-31 <= sell.y+sell.size) {
+				mouseY-Main.barLength > sell.y &&
+				mouseY-Main.barLength <= sell.y+sell.size) {
 			Main.playerMoney += Main.towers.get(this.selectedTower-1).price/2;
 			Main.towers.remove(this.selectedTower-1);
 			
 		}
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
-				mouseY-31 > upgrade.y &&
-				mouseY-31 <= upgrade.y+upgrade.size && Main.playerMoney >= 25) {
+				mouseY-Main.barLength > upgrade.y &&
+				mouseY-Main.barLength <= upgrade.y+upgrade.size && Main.playerMoney >= 25) {
 			if(Main.towers.get(this.selectedTower-1).speed > 1)
 				Main.towers.get(this.selectedTower-1).speed--;
 			Main.towers.get(this.selectedTower-1).range++;

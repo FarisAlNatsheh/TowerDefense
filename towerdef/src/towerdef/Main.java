@@ -30,8 +30,8 @@ public class Main extends JFrame{
 	static AudioInputStream audio;
 	static Clip clip;
 	static FloatControl volume;
-	static float volumeEff = -30;
-	static int vol = -20;
+	static double volumeEff = -37;
+	static double vol = -37;
 	boolean song = false;
 	//Audio variables
 
@@ -49,7 +49,7 @@ public class Main extends JFrame{
 
 	static int playerHealth = 100, playerMoney = 10000, wave = 1;
 	//Game stats
-	
+
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	static ArrayList<Tower> towers = new ArrayList<Tower>();
 	static ArrayList<BloodSpot> bloodSpots = new ArrayList<BloodSpot>();
@@ -79,9 +79,10 @@ public class Main extends JFrame{
 	//3 menu
 
 	int towerSelection = 0;
-
+	static int barLength = 31;
+	boolean fullscreen = false;
 	StatWindow stats;
-	
+
 	public void reAdjust(){
 		tileHeight = winHeight/gridHeight;
 		tileWidth = winWidth/gridWidth;
@@ -111,7 +112,7 @@ public class Main extends JFrame{
 				winHeight = getHeight();
 				reAdjust();
 				try {
-				stats.adjust();
+					stats.adjust();
 				}
 				catch(Exception e1) {}
 			}
@@ -119,13 +120,13 @@ public class Main extends JFrame{
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				
+
 				for(int i = 0; i < Menu.components.length; i++) {
 					Button k = Menu.components[i];
 					if(e.getX() > k.x &&
 							e.getX() <= k.x + k.size*(k.s.length()+2) &&
-							e.getY()-31 > k.y &&
-							e.getY()-31 <= k.y+k.size) {
+							e.getY()-barLength > k.y &&
+							e.getY()-barLength <= k.y+k.size) {
 						if(menuSwitch == 3)
 							switch(i) {
 							case 0:
@@ -148,16 +149,38 @@ public class Main extends JFrame{
 					Button k = Menu.settingsComps[i];
 					if(e.getX() > k.x &&
 							e.getX() <= k.x + k.size*(k.s.length()+2) &&
-							e.getY()-31 > k.y &&
-							e.getY()-31 <= k.y+k.size) {
+							e.getY()-barLength > k.y &&
+							e.getY()-barLength <= k.y+k.size) {
 						if(menuSwitch == 4)
 							switch(i) {
-							case 0:break;
-							case 1:vol++;break;
-							case 2:vol--;break;
-							case 3:volumeEff++;break;
-							case 4:volumeEff--;break;
-							case 5:menuSwitch = 3;break;
+							case 0:
+								if(!fullscreen) {
+									dispose();
+									setUndecorated(true);
+									setVisible(true);
+									setExtendedState(JFrame.MAXIMIZED_BOTH );
+									fullscreen = true;
+									barLength = 0;
+								}
+								else {
+									dispose();
+									setUndecorated(false);
+									setVisible(true);
+									fullscreen = false;
+									barLength = 31;
+								}
+								break;
+							case 1:if(menu.vol < 100)menu.vol++;break;
+							case 2:if(menu.vol > 0)menu.vol--;break;
+							case 3:if(menu.volumeEff < 100)menu.volumeEff++;break;
+							case 4:if(menu.volumeEff > 0)menu.volumeEff--;break;
+							case 5:
+								vol =-80 + menu.vol/100.0 * 86;
+								volumeEff =-80 +menu.volumeEff/100.0 * 86;
+								clip.stop();
+								music("Menu.wav");
+								menuSwitch = 3;
+								break;
 							}
 						else if(menuSwitch == 2) {
 							if(i == 3) {
@@ -176,8 +199,8 @@ public class Main extends JFrame{
 					stats.click(e.getX(), e.getY(), selectedTower);
 					if(e.getButton() == MouseEvent.BUTTON3) {towerSelection = 0;}
 					int mouseX= e.getX()/tileWidth;
-					int mouseY= (e.getY()-31)/tileHeight;
-					if(e.getX() > winWidth && e.getY()-31 < tileHeight*2) {
+					int mouseY= (e.getY()-barLength)/tileHeight;
+					if(e.getX() > winWidth && e.getY()-barLength < tileHeight*2) {
 						towerSelection = 1;
 					}
 					for(Dimension k : placedTowers) {
@@ -197,13 +220,13 @@ public class Main extends JFrame{
 					}
 					catch(Exception e1) {};
 				}
-				
+
 
 			}
 			public void mouseReleased(MouseEvent e) {
 				int mouseX= e.getX()/tileWidth;
-				int mouseY= (e.getY()-31)/tileHeight;
-				if(e.getX() > winWidth && e.getY()-31 < tileHeight*2) {
+				int mouseY= (e.getY()-barLength)/tileHeight;
+				if(e.getX() > winWidth && e.getY()-barLength < tileHeight*2) {
 					towerSelection = 1;
 				}
 				for(Dimension k : placedTowers) {
@@ -223,16 +246,16 @@ public class Main extends JFrame{
 				}
 				catch(Exception e1) {};
 			}
-			
+
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
 				mouseX= e.getX()/tileWidth *tileWidth;
-				mouseY= (e.getY()-31)/tileHeight *tileHeight;
+				mouseY= (e.getY()-barLength)/tileHeight *tileHeight;
 			}
 			public void mouseDragged(MouseEvent e) {
 				mouseX= e.getX()/tileWidth *tileWidth;
-				mouseY= (e.getY()-31)/tileHeight *tileHeight;
+				mouseY= (e.getY()-barLength)/tileHeight *tileHeight;
 			}
 		});
 		//Window setup
@@ -250,7 +273,7 @@ public class Main extends JFrame{
 		JPanel game;
 		//enemies.add(new Enemy(3,0,3,200));
 		stats = new StatWindow(13,7);
-		
+
 		game = new JPanel() {
 			public void paint(Graphics g) {
 				//Game loop
@@ -301,7 +324,7 @@ public class Main extends JFrame{
 					if(delay != 0)
 						delay--;
 				tps = 0;
-				
+
 
 			} 
 		};
@@ -356,7 +379,7 @@ public class Main extends JFrame{
 		}
 		//Move projectiles and remove them if they go offscreen
 
-		if(tick % 400 == 0)
+		if(tick % 40 == 0)
 			enemies.add(new Enemy(3,0,3,100));
 		//Spawn enemies randomly between a certain tick interval
 
@@ -486,7 +509,7 @@ public class Main extends JFrame{
 		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
 		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
 		builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
-		
+
 		//Draw text
 		if(stats.visible)
 			stats.draw(g);
@@ -527,10 +550,10 @@ public class Main extends JFrame{
 		sheetWidth = sheet.getWidth(null)/scale;
 		enemyTexture = new BufferedImage[sheetWidth];
 		for(int i = 0; i < sheetWidth; i++) {
-				enemyTexture[i]= sheet.getSubimage(i * 195,  0, 195,189 );
+			enemyTexture[i]= sheet.getSubimage(i * 195,  0, 195,189 );
 		}
 		//Cuts spirtesheets based on size and saves them into arrays of buffered images
-		
+
 
 
 
@@ -540,7 +563,7 @@ public class Main extends JFrame{
 		Graphics2D g2= (Graphics2D) g;
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 		g.drawImage(towerImg, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
-		
+
 		if(towerSelection == 1) {
 			g.drawImage(towerImg, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
@@ -554,11 +577,11 @@ public class Main extends JFrame{
 			clip = AudioSystem.getClip();
 			clip.open(audio);
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue(vol);
+			volume.setValue((float) vol);
 			clip.start();
 			clip.loop(clip.LOOP_CONTINUOUSLY);
 
-			
+
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());
@@ -571,10 +594,10 @@ public class Main extends JFrame{
 			clip = AudioSystem.getClip();
 			clip.open(audio);
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue(volumeEff);
+			volume.setValue((float) volumeEff);
 			clip.start();
 
-			
+
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());

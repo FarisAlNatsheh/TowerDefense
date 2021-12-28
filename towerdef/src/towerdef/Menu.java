@@ -13,7 +13,7 @@ public class Menu {
 	public static int size=Main.tileWidth*2;
 	static Button[] components = new Button[4];
 	static Button[] settingsComps = new Button[6];
-	
+	int vol = 50, volumeEff = 50;
 	public Menu() {
 		initializeTexture();
 		setUpComponents();
@@ -43,8 +43,8 @@ public class Menu {
 
 		for(int i =0; i < 6; i++)
 			settingsComps[i].draw(g);
-		Main.builder.drawString(g, Integer.toString(Main.vol+70), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
-		Main.builder.drawString(g, Integer.toString((int)Main.volumeEff+80), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2, Main.tileWidth);
+		Main.builder.drawString(g, Integer.toString(vol), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
+		Main.builder.drawString(g, Integer.toString(volumeEff), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2, Main.tileWidth);
 		Main.builder.drawString(g, "Music: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
 		Main.builder.drawString(g, "Sound: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight/2+ Main.tileHeight*3/2, Main.tileWidth);
 
