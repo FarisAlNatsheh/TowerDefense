@@ -12,6 +12,8 @@ public class Menu {
 	public int anim = 0;
 	public static int size=Main.tileWidth*2;
 	static Button[] components = new Button[4];
+	static Button[] settingsComps = new Button[6];
+	
 	public Menu() {
 		initializeTexture();
 		setUpComponents();
@@ -35,6 +37,18 @@ public class Menu {
 		for(int i =0; i < 3; i++)
 			components[i].draw(g);
 	}
+	void settings(Graphics g) {
+		g.drawImage(Main.menuBack,0,0,Main.winWidth, Main.winHeight, null);
+		Main.builder.drawString(g, "Game Settings", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*3, Main.tileWidth);
+
+		for(int i =0; i < 6; i++)
+			settingsComps[i].draw(g);
+		Main.builder.drawString(g, Integer.toString(Main.vol+70), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
+		Main.builder.drawString(g, Integer.toString((int)Main.volumeEff+80), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2, Main.tileWidth);
+		Main.builder.drawString(g, "Music: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
+		Main.builder.drawString(g, "Sound: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight/2+ Main.tileHeight*3/2, Main.tileWidth);
+
+	}
 	public void initializeTexture() {
 		BufferedImage sheet = null;
 		sheet = Main.bloodAnim;
@@ -54,5 +68,12 @@ public class Menu {
 		components[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2,"Settings", Main.tileWidth));
 		components[2] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ 2* Main.tileHeight,"Quit", Main.tileWidth));
 		components[3] = new Button(Main.winWidth/2-2*size, Main.winHeight/2+Main.tileHeight*2, "Restart", size/2);
+		
+		settingsComps[0] = (new Button(Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2- Main.tileHeight,"Fullscreen", Main.tileWidth));
+		settingsComps[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2,"+", Main.tileWidth));
+		settingsComps[2] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight/2,"-", Main.tileWidth));
+		settingsComps[3] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"+", Main.tileWidth));
+		settingsComps[4] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"-", Main.tileWidth));
+		settingsComps[5] = new Button(Main.winWidth/2-2*size+Main.tileWidth, Main.winHeight/2+Main.tileHeight*4, "Back", size/2);
 	}
 }

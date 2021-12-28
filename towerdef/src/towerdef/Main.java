@@ -47,9 +47,9 @@ public class Main extends JFrame{
 	static int[][] map = new int[gridWidth][gridHeight];
 	//Rendering variables
 
-	static int playerHealth = 100, playerMoney = 100, wave = 1;
+	static int playerHealth = 100, playerMoney = 10000, wave = 1;
 	//Game stats
-
+	
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	static ArrayList<Tower> towers = new ArrayList<Tower>();
 	static ArrayList<BloodSpot> bloodSpots = new ArrayList<BloodSpot>();
@@ -131,9 +131,33 @@ public class Main extends JFrame{
 							case 0:
 								clip.stop();
 								menuSwitch = 1; music("Songgame.wav");return;
-							case 1:break;
+							case 1:menuSwitch =  4;break;
 							case 2:
 								System.exit(1);break;
+							}
+						else if(menuSwitch == 2) {
+							if(i == 3) {
+								resetGame();
+								return;
+							}
+						}
+					}
+
+				}
+				for(int i = 0; i < Menu.settingsComps.length; i++) {
+					Button k = Menu.settingsComps[i];
+					if(e.getX() > k.x &&
+							e.getX() <= k.x + k.size*(k.s.length()+2) &&
+							e.getY()-31 > k.y &&
+							e.getY()-31 <= k.y+k.size) {
+						if(menuSwitch == 4)
+							switch(i) {
+							case 0:break;
+							case 1:vol++;break;
+							case 2:vol--;break;
+							case 3:volumeEff++;break;
+							case 4:volumeEff--;break;
+							case 5:menuSwitch = 3;break;
 							}
 						else if(menuSwitch == 2) {
 							if(i == 3) {
@@ -225,7 +249,7 @@ public class Main extends JFrame{
 
 		JPanel game;
 		//enemies.add(new Enemy(3,0,3,200));
-		stats = new StatWindow(12,8);
+		stats = new StatWindow(13,7);
 		
 		game = new JPanel() {
 			public void paint(Graphics g) {
@@ -257,6 +281,9 @@ public class Main extends JFrame{
 				case 3:
 					menu.mainMenu(g);
 					break;
+				case 4:
+					menu.settings(g);
+					break;
 				}
 
 
@@ -274,6 +301,8 @@ public class Main extends JFrame{
 					if(delay != 0)
 						delay--;
 				tps = 0;
+				
+
 			} 
 		};
 
@@ -413,7 +442,6 @@ public class Main extends JFrame{
 				}
 			}
 		}
-		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 
 
 
@@ -510,7 +538,9 @@ public class Main extends JFrame{
 
 	public void drawSelection(Graphics g) {
 		Graphics2D g2= (Graphics2D) g;
+		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 		g.drawImage(towerImg, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
+		
 		if(towerSelection == 1) {
 			g.drawImage(towerImg, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));

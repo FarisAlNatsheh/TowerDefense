@@ -76,6 +76,11 @@ public class TextBuilder {
 					continue;
 				if(n == ':')
 					g.drawImage(textures[11][1],x+ i*(size),y,size,size,null);
+				if(n == '+')
+					g.drawImage(textures[11][0],x+ i*(size),y,size,size,null);
+				if(n == '-')
+					g.drawImage(textures[13][0],x+ i*(size),y,size,size,null);
+
 				if(Character.isDigit(n))
 					g.drawImage(numbers[Character.toLowerCase(s.charAt(i))-'0'],x+ i*(size),y,size,size,null);
 			}
