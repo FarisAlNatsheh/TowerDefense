@@ -381,8 +381,9 @@ public class Main extends JFrame{
 		}
 		//Move projectiles and remove them if they go offscreen
 
-		if(tick % 40 == 0)
-			enemies.add(new Enemy(3,0,3,100));
+		if(tick % 40 == 0) {
+			enemies.add(new Enemy(3,0,3,100, 2));
+		}
 		//Spawn enemies randomly between a certain tick interval
 
 		if(enemies.size() > 0 && towers.size()>0)

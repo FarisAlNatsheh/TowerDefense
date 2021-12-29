@@ -6,26 +6,41 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class Enemy extends Entity{
-	public int X, Y, dir, health, speed = 2, textureDir = 10, maxHealth, damage = 10;
-	public double  animX, animY, anim, speedX= Main.tileWidth/30, speedY = Main.tileHeight/30;
+	public int X, Y, dir, health, textureDir = 10, maxHealth, damage;
+	public double  animX, animY, anim, speedX, speedY;
 	public BufferedImage texture = Main.enemyTexture[0];
-	
+	int type;
 	//Texture & Movement flags directions
-	
+
 	//0 left 9
 	//1 up 8
 	//2 right 11
 	//3 down 10
-	
-	public Enemy(int startX, int startY, int startDir, int health) {
+	public void setEnemy() {
+		switch(type) {
+		case 1:
+			speedX= Main.tileWidth/30.0;
+			speedY = Main.tileHeight/30.0;
+			damage = 10;
+			break;
+		case 2:
+			speedX= Main.tileWidth/10.0;
+			speedY =Main.tileHeight/10.0;
+			damage = 40;
+			break;
+		}
+	}
+
+	public Enemy(int startX, int startY, int startDir, int health, int type) {
 		this.X = startX;
 		this.Y = startY;
 		this.dir = startDir;
 		this.health = health;
+		this.type = type;
 		maxHealth = health;
-	
+		setEnemy();
 	}
-	
+
 	public void checkSurr() {
 		switch(dir) {
 		case 0: 	
@@ -94,7 +109,7 @@ public class Enemy extends Entity{
 			}
 			break;
 		}
-		
+
 	}
 	//Rotate and change texture based on surroundings
 	public void move() {
@@ -139,24 +154,23 @@ public class Enemy extends Entity{
 		}
 	}
 	//Updates location of the enemy on the map
-	
+
 	public void run() {
 		double animSpeed = 0.3;
 		anim+= animSpeed;
 		if(anim >= 20)
 			anim = 0;
 		//Runs animation
-		
+
 		texture = Main.enemyTexture[(int)anim];
 		//texture = Main.towerImg;
 		if(X < Main.gridWidth-1 && Y < Main.gridHeight-1) {
 			checkSurr();
 			move();
 		}
-		
 	}
 	//Run enemy methods
-	
+
 	public void draw(Graphics g) {
 		double angle = 0;
 		if(dir == 0)
