@@ -58,7 +58,7 @@ public class Main extends JFrame{
 	static TextBuilder builder = new TextBuilder();
 	//for drawing strings with sprite font
 
-	static BufferedImage[] enemyTexture, wizard;
+	static BufferedImage[] enemyTexture, enemyTexture2;
 	static BufferedImage projectileImg, blood, bgImg, towerImg, bloodAnim, buttonImg, menuBack, selection;
 	static BufferedImage[][] textures;
 	//textures
@@ -94,8 +94,7 @@ public class Main extends JFrame{
 			k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
 		}
 		for(Enemy k : enemies) {
-			k.speedX = tileWidth/30;
-			k.speedY = tileHeight/30;
+			k.readjust();
 		}
 		try {
 			menu.readjust();
@@ -357,6 +356,7 @@ public class Main extends JFrame{
 		if(playerHealth <= 50) {
 			if(!song) {
 				clip.stop();
+				clip.stop();
 				music("intense.wav");
 				song = true;
 			}
@@ -382,7 +382,7 @@ public class Main extends JFrame{
 		//Move projectiles and remove them if they go offscreen
 
 		if(tick % 40 == 0) {
-			enemies.add(new Enemy(3,0,3,100, 2));
+			enemies.add(new Enemy(3,0,3, rand(1,2)));
 		}
 		//Spawn enemies randomly between a certain tick interval
 
@@ -554,6 +554,17 @@ public class Main extends JFrame{
 		enemyTexture = new BufferedImage[sheetWidth];
 		for(int i = 0; i < sheetWidth; i++) {
 			enemyTexture[i]= sheet.getSubimage(i * 195,  0, 195,189 );
+		}
+		try {
+			sheet = ImageIO.read(new File("enemy2.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sheetWidth = sheet.getWidth(null)/96;
+		enemyTexture2 = new BufferedImage[sheetWidth];
+
+		for(int i = 0; i < sheetWidth; i++) {
+			enemyTexture2[i]= sheet.getSubimage(i * 96,  0, 96,96 );
 		}
 		//Cuts spirtesheets based on size and saves them into arrays of buffered images
 

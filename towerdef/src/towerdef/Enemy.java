@@ -19,25 +19,35 @@ public class Enemy extends Entity{
 	public void setEnemy() {
 		switch(type) {
 		case 1:
-			speedX= Main.tileWidth/30.0;
-			speedY = Main.tileHeight/30.0;
+			health = 200;
+			maxHealth = health;
 			damage = 10;
 			break;
 		case 2:
-			speedX= Main.tileWidth/10.0;
-			speedY =Main.tileHeight/10.0;
+			health = 50;
+			maxHealth = health;
 			damage = 40;
 			break;
 		}
 	}
+	public void readjust() {
+		switch(type) {
+		case 1:
+			speedX= Main.tileWidth/30.0;
+			speedY = Main.tileHeight/30.0;
+			break;
+		case 2:
+			speedX= Main.tileWidth/20.0;
+			speedY =Main.tileHeight/20.0;
+			break;
+		}
+	}
 
-	public Enemy(int startX, int startY, int startDir, int health, int type) {
+	public Enemy(int startX, int startY, int startDir, int type) {
 		this.X = startX;
 		this.Y = startY;
 		this.dir = startDir;
-		this.health = health;
 		this.type = type;
-		maxHealth = health;
 		setEnemy();
 	}
 
@@ -156,13 +166,25 @@ public class Enemy extends Entity{
 	//Updates location of the enemy on the map
 
 	public void run() {
-		double animSpeed = 0.3;
-		anim+= animSpeed;
-		if(anim >= 20)
-			anim = 0;
+
+		
+		if(type == 1) {
+			double animSpeed = 0.3;
+			anim+= animSpeed;
+			if(anim >= 20)
+				anim = 0;
+			texture = Main.enemyTexture[(int)anim];
+		}
+		else if(type == 2){
+			double animSpeed = 0.2;
+			anim+= animSpeed;
+			if(anim > 3)
+				anim = 0;
+			texture = Main.enemyTexture2[(int)anim];
+		}
 		//Runs animation
 
-		texture = Main.enemyTexture[(int)anim];
+		
 		//texture = Main.towerImg;
 		if(X < Main.gridWidth-1 && Y < Main.gridHeight-1) {
 			checkSurr();
@@ -181,6 +203,8 @@ public class Enemy extends Entity{
 			angle = 0;
 		else if(dir == 3)
 			angle = Math.PI/2;
+		if(type == 2)
+			angle+= Math.PI/-2;
 		Graphics2D g2 = (Graphics2D) g;
 		g2.rotate(angle, X*Main.tileWidth+animX+Main.tileWidth/2, Y*Main.tileHeight+animY+ Main.tileHeight/2);
 		g.drawImage(texture, Main.tileWidth*X+(int)animX , Main.tileHeight*Y+(int)animY, Main.tileWidth, Main.tileHeight, null);
