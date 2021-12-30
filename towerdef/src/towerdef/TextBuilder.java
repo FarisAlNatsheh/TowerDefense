@@ -15,25 +15,20 @@ public class TextBuilder {
 	public TextBuilder() {
 		BufferedImage sheet = null;
 		try {
-			sheet = ImageIO.read(new File("font.png"));
+			sheet = ImageIO.read(new File("font2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int scale = 20;
-		int sheetHeight = sheet.getHeight(null)/scale;
-		int sheetWidth = sheet.getWidth(null)/scale;
+		int scale = 16;
+		int sheetHeight = sheet.getHeight(null)/16;
+		int sheetWidth = sheet.getWidth(null)/18;
 		textures = new BufferedImage[sheetWidth][sheetHeight];
 		for(int i = 0; i < sheetWidth; i++) {
 			for(int i2 = 0; i2 < sheetHeight; i2++) {
-				textures[i][i2] = sheet.getSubimage(i * scale,  i2 * scale, scale,scale );
+				textures[i][i2] = sheet.getSubimage(i * 18,  i2 * 16, 18,16 );
 			}
 		}
-		try {
-			sheet = ImageIO.read(new File("zombie2.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		setFont();
+		setFont2();
 
 	}
 	public void setFont() {
@@ -64,6 +59,22 @@ public class TextBuilder {
 		}
 
 	}
+	public void setFont2() {
+		for(int i = 0; i < 7; i++) 
+			letters[i] = textures[i][3];
+		letters[7] = textures[8][3];
+		for(int i = 0; i < 9; i++) 
+			letters[i+8] = textures[i][4];
+		for(int i = 1; i < 9; i++) 
+			letters[i+16] = textures[i][5];
+		numbers[0] = textures[8][0];
+		for(int i = 0; i < 3; i++) 
+			numbers[i+1] = textures[i][1];
+		for(int i = 4; i < 9; i++) 
+			numbers[i] = textures[i][1];
+		numbers[9] = textures[0][2];
+		
+	}
 	public void drawString(Graphics g, String s, int x, int y, int size) {
 		char n = 0;
 		for(int i =0;i < s.length();i++) {
@@ -75,11 +86,11 @@ public class TextBuilder {
 				if(n == ' ')
 					continue;
 				if(n == ':')
-					g.drawImage(textures[11][1],x+ i*(size),y,size,size,null);
+					g.drawImage(textures[1][2],x+ i*(size),y,size,size,null);
 				if(n == '+')
-					g.drawImage(textures[11][0],x+ i*(size),y,size,size,null);
+					g.drawImage(textures[3][0],x+ i*(size),y,size,size,null);
 				if(n == '-')
-					g.drawImage(textures[13][0],x+ i*(size),y,size,size,null);
+					g.drawImage(textures[5][0],x+ i*(size),y,size,size,null);
 
 				if(Character.isDigit(n))
 					g.drawImage(numbers[Character.toLowerCase(s.charAt(i))-'0'],x+ i*(size),y,size,size,null);

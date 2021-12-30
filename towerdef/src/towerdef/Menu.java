@@ -39,16 +39,16 @@ public class Menu {
 	}
 	void settings(Graphics g) {
 		g.drawImage(Main.menuBack,0,0,Main.winWidth, Main.winHeight, null);
-		Main.builder.drawString(g, "Game Settings", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*3, Main.tileWidth);
+		Main.builder.drawString(g, "Game Settings", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*5, Main.tileWidth);
 
 		for(int i =0; i < 6; i++)
 			settingsComps[i].draw(g);
 		if(Main.game) {
 			settingsComps[6].draw(g);
 		}
-		Main.builder.drawString(g, Integer.toString(vol), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
-		Main.builder.drawString(g, Integer.toString(volumeEff), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2, Main.tileWidth);
-		Main.builder.drawString(g, "Music: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
+		Main.builder.drawString(g, Integer.toString(vol), Main.winWidth/2- Main.tileWidth/2, Main.winHeight/2- Main.tileHeight/3, Main.tileWidth);
+		Main.builder.drawString(g, Integer.toString(volumeEff), Main.winWidth/2- Main.tileWidth/2, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2- Main.tileHeight/4, Main.tileWidth);
+		Main.builder.drawString(g, "Music: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2- Main.tileHeight/3, Main.tileWidth);
 		Main.builder.drawString(g, "Sound: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight/2+ Main.tileHeight*3/2, Main.tileWidth);
 
 	}
@@ -68,15 +68,15 @@ public class Menu {
 	
 	public void setUpComponents() {
 		components[0] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2- Main.tileHeight,"Start", Main.tileWidth));
-		components[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2,"Settings", Main.tileWidth));
-		components[2] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ 2* Main.tileHeight,"Quit", Main.tileWidth));
+		components[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight,"Settings", Main.tileWidth));
+		components[2] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ 3*Main.tileHeight,"Quit", Main.tileWidth));
 		components[3] = new Button(Main.winWidth/2-2*size, Main.winHeight/2+Main.tileHeight*2, "Restart", size/2);
 		
-		settingsComps[0] = (new Button(Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2- Main.tileHeight,"Fullscreen", Main.tileWidth));
-		settingsComps[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2,"+", Main.tileWidth));
-		settingsComps[2] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight/2,"-", Main.tileWidth));
-		settingsComps[3] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"+", Main.tileWidth));
-		settingsComps[4] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"-", Main.tileWidth));
+		settingsComps[0] = (new Button(Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2- Main.tileHeight*3,"Fullscreen", Main.tileWidth));
+		settingsComps[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2- Main.tileHeight/2,"+", Main.tileWidth));
+		settingsComps[2] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2- Main.tileHeight/2,"-", Main.tileWidth));
+		settingsComps[3] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight*2,"+", Main.tileWidth));
+		settingsComps[4] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight*2,"-", Main.tileWidth));
 		settingsComps[5] = new Button(Main.winWidth/2-2*size+Main.tileWidth, Main.winHeight/2+Main.tileHeight*4, "Back", size/2);
 		settingsComps[6] = new Button(0,0, "back to menu", size/3);
 

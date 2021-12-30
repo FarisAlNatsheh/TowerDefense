@@ -1,4 +1,6 @@
 package towerdef;
+//LASER SOUND
+//GUI CraftPix.net 2D Game Assets
 
 
 import java.awt.*;
@@ -30,8 +32,8 @@ public class Main extends JFrame{
 	static AudioInputStream audio;
 	static Clip clip;
 	static FloatControl volume;
-	static double volumeEff = -37;
-	static double vol = -37;
+	static double volumeEff = -10;
+	static double vol = -10;
 	boolean song = false;
 	//Audio variables
 
@@ -47,7 +49,7 @@ public class Main extends JFrame{
 	static int[][] map = new int[gridWidth][gridHeight];
 	//Rendering variables
 
-	static int playerHealth = 100, playerMoney = 10000, wave = 1;
+	static int playerHealth = 100, playerMoney = 123456789, wave = 1;
 	//Game stats
 
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -87,7 +89,7 @@ public class Main extends JFrame{
 	public void reAdjust(){
 		tileHeight = winHeight/gridHeight;
 		tileWidth = winWidth/gridWidth;
-		pause = new Button(0,winHeight-tileHeight,"Pause",tileWidth/4);
+		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
 		for(Tower k : towers) {
 			k.width = Main.tileWidth;
 			k.height = Main.tileHeight;
@@ -103,7 +105,7 @@ public class Main extends JFrame{
 		catch(Exception e1) {}
 	}
 	public Main() {
-		pause = new Button(0,winHeight-tileHeight+barLength,"Pause",tileWidth/4);
+		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
 		music("Menu.wav");
 		//Re-adjusting variables depending on screen size
 		addComponentListener(new ComponentAdapter() {
@@ -198,6 +200,9 @@ public class Main extends JFrame{
 							case 6:
 								if(game) {
 									resetGame();
+									clip.stop();
+									music("Menu.wav");
+									game = false;
 									menuSwitch = 3;
 								}
 								break;
@@ -559,8 +564,8 @@ public class Main extends JFrame{
 			towerImg = ImageIO.read(new File("cannon2.png"));
 			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
 			buttonImg = ImageIO.read(new File("button.png"));
-			menuBack = ImageIO.read(new File("menubackground.jpg"));
-			selection = ImageIO.read(new File("gradient.jpg"));
+			menuBack = ImageIO.read(new File("bg.jpg"));
+			selection = ImageIO.read(new File("gradient.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -642,8 +647,6 @@ public class Main extends JFrame{
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			volume.setValue((float) volumeEff);
 			clip.start();
-
-
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());

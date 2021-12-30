@@ -14,8 +14,8 @@ public class Button extends Component{
 	}
 	
 	public void draw(Graphics g){
-		g.drawImage(Main.buttonImg,x,y,size*(s.length()+2),size,null);
-		Main.builder.drawString(g, s, x+size, y, size);
+		g.drawImage(Main.buttonImg,x,y,size*(s.length()+2),size+Main.tileWidth/2,null);
+		Main.builder.drawString(g, s, x+size, y+Main.tileWidth/4, size);
 	}
 	
 }
