@@ -20,6 +20,7 @@ public class Tower extends Entity{
 	static double defaultRange = 2;
 	int price = 50;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	int hitCount;
 	public Tower(int x, int y) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;
 		this.y = y*Main.tileHeight+Main.tileHeight/2;
@@ -71,7 +72,7 @@ public class Tower extends Entity{
 			//Calculate angle
 			
 			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x,y, target, 10,0));
+				projectiles.add(new Projectile(x,y, target, 1,0));
 				Main.soundEffect("laser4.wav"); //credit dklon
 			}
 			//Create new projectile at the towers location
@@ -141,6 +142,9 @@ public class Tower extends Entity{
 			}
 		}
 		//Rotating the turret while compensating for the difference in negative and positive angles
+	}
+	public void incCount() {
+		hitCount++;
 	}
 
 }

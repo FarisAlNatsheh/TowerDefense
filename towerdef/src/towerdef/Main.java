@@ -80,13 +80,14 @@ public class Main extends JFrame{
 
 	int towerSelection = 0;
 	static int barLength = 31;
-	boolean fullscreen = false;
+	boolean fullscreen;
+	static boolean game;
 	StatWindow stats;
-
+	Button pause;
 	public void reAdjust(){
 		tileHeight = winHeight/gridHeight;
 		tileWidth = winWidth/gridWidth;
-
+		pause = new Button(0,winHeight-tileHeight,"Pause",tileWidth/4);
 		for(Tower k : towers) {
 			k.width = Main.tileWidth;
 			k.height = Main.tileHeight;
@@ -102,6 +103,7 @@ public class Main extends JFrame{
 		catch(Exception e1) {}
 	}
 	public Main() {
+		pause = new Button(0,winHeight-tileHeight+barLength,"Pause",tileWidth/4);
 		music("Menu.wav");
 		//Re-adjusting variables depending on screen size
 		addComponentListener(new ComponentAdapter() {
@@ -178,9 +180,26 @@ public class Main extends JFrame{
 							case 5:
 								vol =-80 + menu.vol/100.0 * 86;
 								volumeEff =-80 +menu.volumeEff/100.0 * 86;
-								clip.stop();
-								music("Menu.wav");
-								menuSwitch = 3;
+								
+								if(!game) {
+									clip.stop();
+									music("Menu.wav");
+									menuSwitch = 3;
+								}
+								else{
+									clip.stop();
+									if(playerHealth > 50)
+										music("Songgame.wav");
+									else
+										music("intense.wav");
+									menuSwitch = 1;
+								}
+								break;
+							case 6:
+								if(game) {
+									resetGame();
+									menuSwitch = 3;
+								}
 								break;
 							}
 						else if(menuSwitch == 2) {
@@ -193,6 +212,16 @@ public class Main extends JFrame{
 
 				}
 				if(menuSwitch == 1) {
+					if(e.getX() > pause.x &&
+							e.getX() <= pause.x + pause.size*(pause.s.length()+2) &&
+							e.getY()-barLength > pause.y &&
+							e.getY()-barLength <= pause.y+pause.size) {
+						menuSwitch = 4;
+						
+						winWidth = getWidth();
+						winHeight = getHeight();
+						reAdjust();
+					}
 					for(int i =0; i < towers.size(); i++) {
 						if(mouseX/tileWidth == towers.get(i).mapX && mouseY/tileHeight == towers.get(i).mapY) {selectedTower = i+1;break;}
 						selectedTower = 0;
@@ -288,7 +317,7 @@ public class Main extends JFrame{
 				checkCollisions();
 				drawSelection(g);
 				//Drawing entities and blocks
-
+				pause.draw(g);
 				tick++;
 				tps++;
 
@@ -349,6 +378,7 @@ public class Main extends JFrame{
 	}
 	public void game() {
 		//Run each tick
+		game = true;
 		winWidth = getWidth()-tileWidth*4;
 		winHeight = getHeight();
 		reAdjust();
@@ -428,9 +458,10 @@ public class Main extends JFrame{
 								}
 								if(towers.get(k).projectiles.get(j).pierce <= 1)
 									towers.get(k).projectiles.remove(j);
-								else
+								else 
 									towers.get(k).projectiles.get(j).pierce--;
 
+								towers.get(k).incCount();;
 							}
 						//Check the collisions between the midpoints of the projectile and the enemy
 
@@ -592,7 +623,7 @@ public class Main extends JFrame{
 			clip.open(audio);
 			clip.start();
 			clip.loop(clip.LOOP_CONTINUOUSLY);
-			
+
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			volume.setValue((float) vol);
 

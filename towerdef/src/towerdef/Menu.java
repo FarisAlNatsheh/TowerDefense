@@ -12,7 +12,7 @@ public class Menu {
 	public int anim = 0;
 	public static int size=Main.tileWidth*2;
 	static Button[] components = new Button[4];
-	static Button[] settingsComps = new Button[6];
+	static Button[] settingsComps = new Button[7];
 	int vol = 50, volumeEff = 50;
 	public Menu() {
 		initializeTexture();
@@ -43,6 +43,9 @@ public class Menu {
 
 		for(int i =0; i < 6; i++)
 			settingsComps[i].draw(g);
+		if(Main.game) {
+			settingsComps[6].draw(g);
+		}
 		Main.builder.drawString(g, Integer.toString(vol), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
 		Main.builder.drawString(g, Integer.toString(volumeEff), Main.winWidth/2- Main.tileWidth, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2, Main.tileWidth);
 		Main.builder.drawString(g, "Music: ", Main.winWidth/2- Main.tileWidth*10, Main.winHeight/2+ Main.tileHeight/2, Main.tileWidth);
@@ -75,5 +78,7 @@ public class Menu {
 		settingsComps[3] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"+", Main.tileWidth));
 		settingsComps[4] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2+ Main.tileHeight/2+ Main.tileHeight*2,"-", Main.tileWidth));
 		settingsComps[5] = new Button(Main.winWidth/2-2*size+Main.tileWidth, Main.winHeight/2+Main.tileHeight*4, "Back", size/2);
+		settingsComps[6] = new Button(0,0, "back to menu", size/3);
+
 	}
 }

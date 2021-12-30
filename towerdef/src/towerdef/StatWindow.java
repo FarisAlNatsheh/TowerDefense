@@ -13,7 +13,7 @@ public class StatWindow extends Component{
 	int width = Main.tileWidth*5;
 	int height = Main.tileHeight*4;
 	BufferedImage texture;
-	Button sell, upgrade;
+	Button sell, upgrade, hitCount;
 	boolean visible = false;
 	int selectedTower;
 	public void initializeTextures() {
@@ -29,6 +29,7 @@ public class StatWindow extends Component{
 		height = Main.tileHeight*4;
 		sell = new Button((x-1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
 		upgrade = new Button((x-1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
+
 	}
 	public StatWindow(int x, int y) {
 		this.x = x;
@@ -37,6 +38,7 @@ public class StatWindow extends Component{
 		sell = new Button((x-1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
 		upgrade = new Button((x-1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
 
+	
 	}
 	public void draw(Graphics g) {
 		g.setColor(new Color(20,20,70));
@@ -45,6 +47,7 @@ public class StatWindow extends Component{
 		upgrade.draw(g);
 		sell.draw(g);
 		Main.builder.drawString(g, "Price: "+ Main.towers.get(selectedTower-1).price/2, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight,Main.tileWidth/5);
+		Main.builder.drawString(g, "Damage: "+ Main.towers.get(selectedTower-1).hitCount, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight+Main.tileHeight/2,Main.tileWidth/5);
 
 	}
 	public void click(int mouseX, int mouseY, int selectedTower) {
