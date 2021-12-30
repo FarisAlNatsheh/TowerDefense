@@ -61,7 +61,7 @@ public class Main extends JFrame{
 	//for drawing strings with sprite font
 
 	static BufferedImage[] enemyTexture, enemyTexture2;
-	static BufferedImage projectileImg, blood, bgImg, towerImg, bloodAnim, buttonImg, menuBack, selection;
+	static BufferedImage projectileImg, blood, bgImg, bloodAnim, buttonImg, menuBack, selection;
 	static BufferedImage[][] textures;
 	//textures
 
@@ -244,7 +244,7 @@ public class Main extends JFrame{
 					}
 					try {
 						if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
-							Tower tower = new Tower(mouseX, mouseY);
+							Tower tower = new Tower1(mouseX, mouseY);
 							towers.add(tower);
 							placedTowers.add(new Dimension(mouseX, mouseY));
 							playerMoney-=50;
@@ -270,7 +270,7 @@ public class Main extends JFrame{
 				}
 				try {
 					if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
-						Tower tower = new Tower(mouseX, mouseY);
+						Tower tower = new Tower1(mouseX, mouseY);
 						towers.add(tower);
 						placedTowers.add(new Dimension(mouseX, mouseY));
 						towerSelection = 0;
@@ -561,7 +561,6 @@ public class Main extends JFrame{
 			projectileImg = ImageIO.read(new File("laser.png"));
 			blood = ImageIO.read(new File("blood.png"));
 			bgImg = ImageIO.read(new File("background.png"));
-			towerImg = ImageIO.read(new File("cannon2.png"));
 			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
 			buttonImg = ImageIO.read(new File("button.png"));
 			menuBack = ImageIO.read(new File("bg.jpg"));
@@ -612,12 +611,12 @@ public class Main extends JFrame{
 	public void drawSelection(Graphics g) {
 		Graphics2D g2= (Graphics2D) g;
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
-		g.drawImage(towerImg, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
+		g.drawImage(Tower1.initializeTexture(), winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
 
 		if(towerSelection == 1) {
-			g.drawImage(towerImg, mouseX, mouseY,tileWidth, tileHeight,null );
+			g.drawImage(Tower1.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
-			g.fillOval((int)((mouseX/tileWidth-Tower.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower.defaultRange)*Main.tileHeight), (int) ((Tower.defaultRange*2+1)*Main.tileWidth), (int)((Tower.defaultRange*2+1)*Main.tileHeight));
+			g.fillOval((int)((mouseX/tileWidth-Tower1.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower1.defaultRange)*Main.tileHeight), (int) ((Tower1.defaultRange*2+1)*Main.tileWidth), (int)((Tower1.defaultRange*2+1)*Main.tileHeight));
 		}
 	}
 	public static void music(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it

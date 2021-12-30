@@ -3,6 +3,7 @@ package towerdef;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Tower extends Entity{
@@ -12,18 +13,26 @@ public class Tower extends Entity{
 	public int mapY;
 	public int width = Main.tileWidth;
 	public int height = Main.tileHeight;
-	int speed = 10; //per how many ticks
+	int speed; //per how many ticks
 	double initialXdif;
 	double initialYdif;
 	double angle;
-	double range = 2;
-	static double defaultRange = 2;
-	int price = 50;
+	double range;
+	int price;
+	int pierce;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	int hitCount;
-	public Tower(int x, int y) {
+	int projType;
+	BufferedImage texture;
+	public Tower(int x, int y, int pierce, int price, double range,int speed, int projType, BufferedImage texture) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;
 		this.y = y*Main.tileHeight+Main.tileHeight/2;
+		this.pierce = pierce;
+		this.price = price;
+		this.range = range;
+		this.speed = speed;
+		this.projType = projType;
+		this.texture = texture;
 		mapX = x;
 		mapY = y;
 	}
@@ -72,7 +81,7 @@ public class Tower extends Entity{
 			//Calculate angle
 			
 			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x,y, target, 1,0));
+				projectiles.add(new Projectile(x,y, target, pierce,projType));
 				Main.soundEffect("laser4.wav"); //credit dklon
 			}
 			//Create new projectile at the towers location
@@ -111,33 +120,33 @@ public class Tower extends Entity{
 		if(initialYdif > 0) {
 			if(angle < 0) {
 				g2.rotate(angle, x,y);
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 				g2.rotate(angle*-1, x,y);
 			}
 			else {
 				g2.rotate(angle+ Math.PI, x,y);
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 				g2.rotate((angle+ Math.PI)*-1, x,y);
 			}
 		}
 		else if(initialYdif < 0) {
 			if(angle > 0) {
 				g2.rotate(angle, x,y);
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 				g2.rotate(angle*-1,x,y);
 			}
 			else {
 				g2.rotate(angle+ Math.PI, x,y);
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 				g2.rotate((angle+ Math.PI)*-1, x,y);
 			}
 		}
 		else if(initialYdif == 0) {
 			if(initialXdif < 0)
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 			else {
 				g2.rotate(Math.PI, x,y);
-				g.drawImage(Main.towerImg,this.x-width/2,this.y-height/2,width,height,null);
+				g.drawImage(texture,this.x-width/2,this.y-height/2,width,height,null);
 				g2.rotate(Math.PI*-1, x,y);
 			}
 		}
