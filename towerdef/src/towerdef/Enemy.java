@@ -20,13 +20,20 @@ public class Enemy extends Entity{
 		switch(type) {
 		case 1:
 			health = 200;
+			health+= health * WaveHandler.healthAddition;
 			maxHealth = health;
 			damage = 10;
 			break;
 		case 2:
 			health = 50;
+			health+= health * WaveHandler.healthAddition;
 			maxHealth = health;
 			damage = 40;
+			break;
+		case 3:
+			health = 5000;
+			maxHealth = health;
+			damage = 1000;
 			break;
 		}
 	}
@@ -39,6 +46,10 @@ public class Enemy extends Entity{
 		case 2:
 			speedX= Main.tileWidth/20.0;
 			speedY =Main.tileHeight/20.0;
+			break;
+		case 3:
+			speedX= Main.tileWidth/90.0;
+			speedY =Main.tileHeight/90.0;
 			break;
 		}
 	}
@@ -181,6 +192,13 @@ public class Enemy extends Entity{
 			if(anim > 3)
 				anim = 0;
 			texture = Main.enemyTexture2[(int)anim];
+		}
+		else if(type == 3){
+			double animSpeed = 0.2;
+			anim+= animSpeed;
+			if(anim > 3)
+				anim = 0;
+			texture = Main.bossTexture;
 		}
 		//Runs animation
 

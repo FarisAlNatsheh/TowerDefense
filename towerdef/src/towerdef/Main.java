@@ -1,8 +1,11 @@
 package towerdef;
 //LASER SOUND
-//GUI CraftPix.net 2D Game Assets
-
-
+//GUI CraftPix.net 2D Game Assets buttons and windows
+//Xavier4321 turret: The original pic's are from Scorpio's Construction Kit2. Check it out here (http://opengameart.org/content/space-ship-construction-kit)
+//Xavier4321 bot Made with Wuditog's Parts2 App (https://www.arrall.com/part2art/). Parts from Scorpio (http://opengameart.org/content/space-ship-construction-kit)
+//Credit Skorpio for the kit and Kanadaj for the design either on the start-screen, menu, end-screen or credits screen. titan turret
+//credit dklon for laser sound 
+//Link To mobeyee.com laser
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -27,16 +30,17 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Main extends JFrame{
 
-	int mouseX, mouseY;
+	static int mouseX;
+	static int mouseY;
 	//Mouse location on screen
 	static AudioInputStream audio;
 	static Clip clip;
 	static FloatControl volume;
 	static double volumeEff = -10;
 	static double vol = -10;
-	boolean song = false;
+	static boolean song = false;
 	//Audio variables
-
+	static Clip effect;
 	static int tick, tps;
 	//Tick counter variables
 
@@ -49,7 +53,7 @@ public class Main extends JFrame{
 	static int[][] map = new int[gridWidth][gridHeight];
 	//Rendering variables
 
-	static int playerHealth = 100, playerMoney = 123456789, wave = 1;
+	static int playerHealth = 100, playerMoney = 102222220, wave = 1;
 	//Game stats
 
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -61,50 +65,94 @@ public class Main extends JFrame{
 	//for drawing strings with sprite font
 
 	static BufferedImage[] enemyTexture, enemyTexture2;
-	static BufferedImage projectileImg, blood, bgImg, bloodAnim, buttonImg, menuBack, selection;
+	static BufferedImage projectileImg, blood, bgImg, bloodAnim, buttonImg, menuBack, selection, bossTexture;
 	static BufferedImage[][] textures;
 	//textures
 
-	ArrayList<Dimension> placedTowers = new ArrayList<Dimension>();
-	int selectedTower;
+	static ArrayList<Dimension> placedTowers = new ArrayList<Dimension>();
+	static int selectedTower;
 	//To save the locations of already placed towers ( checked to avoid adding multiple towers in the same spot)
 
 
 	long startTime;
 	int delay , targetTPS = 70;
+	static boolean toggleFullscreen = false;
 	//delay before each frame (how often should the program tick)
 
 	Menu menu;
-	int menuSwitch = 3; //Menu switch
+	WaveHandler waveHandler;
+	static int menuSwitch = 3; //Menu switch
 	//1 game
 	//2 death
 	//3 menu
-
-	int towerSelection = 0;
+	//4 settings
+	
+	static int towerSelection = 0;
 	static int barLength = 31;
 	boolean fullscreen;
 	static boolean game;
-	StatWindow stats;
+	static StatWindow stats;
 	Button pause;
-	public void reAdjust(){
-		tileHeight = winHeight/gridHeight;
-		tileWidth = winWidth/gridWidth;
-		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
-		for(Tower k : towers) {
-			k.width = Main.tileWidth;
-			k.height = Main.tileHeight;
-			k.x = k.mapX * Main.tileWidth+Main.tileWidth/2;
-			k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
+
+	public static void placeTower(int x, int y) {
+		int mouseX=x/tileWidth;
+		int mouseY= (y-barLength)/tileHeight;
+		if(x > winWidth && y-barLength < tileHeight*2) {
+			towerSelection = 1;
 		}
-		for(Enemy k : enemies) {
-			k.readjust();
+		if(x > winWidth && y-barLength > tileHeight*2  && y-barLength < tileHeight*5) {
+			towerSelection = 2;
+		}
+		if(x > winWidth && y-barLength > tileHeight*6  && y-barLength < tileHeight*8) {
+			towerSelection = 3;
+		}
+		for(Dimension k : placedTowers) {
+			if(k.width == mouseX && k.height == mouseY)
+				return;
 		}
 		try {
-			menu.readjust();
+			if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2  && towerSelection != 0) {
+				Tower tower = null;
+				if(towerSelection == 1)
+					tower = new Tower1(mouseX, mouseY);
+				if(towerSelection == 2)
+					tower = new Tower2(mouseX, mouseY);
+				if(towerSelection == 3)
+					tower = new Tower3(mouseX, mouseY);
+				if(tower.price <= playerMoney) {
+					towers.add(tower);
+					placedTowers.add(new Dimension(mouseX, mouseY));
+					towerSelection = 0;
+					playerMoney-=tower.price;
+				}
+			}
+			else
+				towerSelection = 0;
 		}
-		catch(Exception e1) {}
+		catch(Exception e1) {};
 	}
+
+	public void setFullscreen() {
+		if(!fullscreen) {
+			dispose();
+			setUndecorated(true);
+			setVisible(true);
+			setExtendedState(JFrame.MAXIMIZED_BOTH );
+			fullscreen = true;
+			barLength = 0;
+		}
+		else {
+			dispose();
+			setUndecorated(false);
+			setVisible(true);
+			fullscreen = false;
+			barLength = 31;
+		}
+	}
+
 	public Main() {
+		vol =-80 + 70/100.0 * 86;
+		volumeEff =-80 +70/100.0 * 86;
 		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
 		music("Menu.wav");
 		//Re-adjusting variables depending on screen size
@@ -113,6 +161,7 @@ public class Main extends JFrame{
 				//System.out.println("Resized to " + e.getComponent().getSize());
 				winWidth = getWidth();
 				winHeight = getHeight();
+
 				reAdjust();
 				try {
 					stats.adjust();
@@ -120,168 +169,27 @@ public class Main extends JFrame{
 				catch(Exception e1) {}
 			}
 		});
-
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-
-				for(int i = 0; i < Menu.components.length; i++) {
-					Button k = Menu.components[i];
-					if(e.getX() > k.x &&
-							e.getX() <= k.x + k.size*(k.s.length()+2) &&
-							e.getY()-barLength > k.y &&
-							e.getY()-barLength <= k.y+k.size) {
-						if(menuSwitch == 3)
-							switch(i) {
-							case 0:
-								clip.stop();
-								music("Songgame.wav");
-								menuSwitch = 1; 
-								return;
-							case 1:menuSwitch =  4;break;
-							case 2:
-								System.exit(1);break;
-							}
-						else if(menuSwitch == 2) {
-							if(i == 3) {
-								resetGame();
-								return;
-							}
-						}
-					}
-
-				}
-				for(int i = 0; i < Menu.settingsComps.length; i++) {
-					Button k = Menu.settingsComps[i];
-					if(e.getX() > k.x &&
-							e.getX() <= k.x + k.size*(k.s.length()+2) &&
-							e.getY()-barLength > k.y &&
-							e.getY()-barLength <= k.y+k.size) {
-						if(menuSwitch == 4)
-							switch(i) {
-							case 0:
-								if(!fullscreen) {
-									dispose();
-									setUndecorated(true);
-									setVisible(true);
-									setExtendedState(JFrame.MAXIMIZED_BOTH );
-									fullscreen = true;
-									barLength = 0;
-								}
-								else {
-									dispose();
-									setUndecorated(false);
-									setVisible(true);
-									fullscreen = false;
-									barLength = 31;
-								}
-								break;
-							case 1:if(menu.vol < 100)menu.vol++;break;
-							case 2:if(menu.vol > 0)menu.vol--;break;
-							case 3:if(menu.volumeEff < 100)menu.volumeEff++;break;
-							case 4:if(menu.volumeEff > 0)menu.volumeEff--;break;
-							case 5:
-								vol =-80 + menu.vol/100.0 * 86;
-								volumeEff =-80 +menu.volumeEff/100.0 * 86;
-								
-								if(!game) {
-									clip.stop();
-									music("Menu.wav");
-									menuSwitch = 3;
-								}
-								else{
-									clip.stop();
-									if(playerHealth > 50)
-										music("Songgame.wav");
-									else
-										music("intense.wav");
-									menuSwitch = 1;
-								}
-								break;
-							case 6:
-								if(game) {
-									resetGame();
-									clip.stop();
-									music("Menu.wav");
-									game = false;
-									menuSwitch = 3;
-								}
-								break;
-							}
-						else if(menuSwitch == 2) {
-							if(i == 3) {
-								resetGame();
-								return;
-							}
-						}
-					}
-
-				}
 				if(menuSwitch == 1) {
-					if(e.getX() > pause.x &&
-							e.getX() <= pause.x + pause.size*(pause.s.length()+2) &&
-							e.getY()-barLength > pause.y &&
-							e.getY()-barLength <= pause.y+pause.size) {
-						menuSwitch = 4;
-						
-						winWidth = getWidth();
-						winHeight = getHeight();
-						reAdjust();
-					}
-					for(int i =0; i < towers.size(); i++) {
-						if(mouseX/tileWidth == towers.get(i).mapX && mouseY/tileHeight == towers.get(i).mapY) {selectedTower = i+1;break;}
-						selectedTower = 0;
-					}
-					stats.click(e.getX(), e.getY(), selectedTower);
-					if(e.getButton() == MouseEvent.BUTTON3) {towerSelection = 0;}
-					int mouseX= e.getX()/tileWidth;
-					int mouseY= (e.getY()-barLength)/tileHeight;
-					if(e.getX() > winWidth && e.getY()-barLength < tileHeight*2) {
-						towerSelection = 1;
-					}
-					for(Dimension k : placedTowers) {
-						if(k.width == mouseX && k.height == mouseY)
-							return;
-					}
-					try {
-						if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
-							Tower tower = new Tower1(mouseX, mouseY);
-							towers.add(tower);
-							placedTowers.add(new Dimension(mouseX, mouseY));
-							playerMoney-=50;
-							towerSelection = 0;
-						}
-						else
-							return;
-					}
-					catch(Exception e1) {};
+					pauseGame(e.getX(), e.getY());
+					menu.gameClick(e.getX(), e.getY(), e);
+						stats.click(e.getX(), e.getY(), Main.selectedTower);
 				}
-
-
+				else if(menuSwitch == 2) 
+					menu.deathClick(e.getX(), e.getY());
+				else if(menuSwitch == 3)
+					menu.menuClick(e.getX(), e.getY());
+				else if(menuSwitch == 4)
+					menu.settingsClick(e.getX(), e.getY());
+				if(toggleFullscreen) {
+					setFullscreen();
+					toggleFullscreen = false;
+				}
 			}
 			public void mouseReleased(MouseEvent e) {
-				int mouseX= e.getX()/tileWidth;
-				int mouseY= (e.getY()-barLength)/tileHeight;
-				if(e.getX() > winWidth && e.getY()-barLength < tileHeight*2) {
-					towerSelection = 1;
-				}
-				for(Dimension k : placedTowers) {
-					if(k.width == mouseX && k.height == mouseY)
-						return;
-				}
-				try {
-					if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2 && towerSelection == 1 && playerMoney >= 50) {
-						Tower tower = new Tower1(mouseX, mouseY);
-						towers.add(tower);
-						placedTowers.add(new Dimension(mouseX, mouseY));
-						towerSelection = 0;
-						playerMoney-=50;
-					}
-					else
-						towerSelection = 0;
-				}
-				catch(Exception e1) {};
+				placeTower(e.getX(), e.getY());
 			}
-
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
@@ -304,31 +212,32 @@ public class Main extends JFrame{
 		initializeTextures();
 
 		menu = new Menu();
-
+		waveHandler = new WaveHandler(3,0,3);
 		JPanel game;
-		//enemies.add(new Enemy(3,0,3,200));
 		stats = new StatWindow(13,7);
-
+		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
 			public void paint(Graphics g) {
 				//Game loop
 				startTime = System.currentTimeMillis();
-				try {Thread.sleep(delay);} 
+				try {Thread.sleep(0);} 
 				catch (InterruptedException e) {}
-
+		
 				repaint();
-				drawGrid(g);
-				drawEnts(g);
-				checkCollisions();
-				drawSelection(g);
-				//Drawing entities and blocks
-				pause.draw(g);
+
+				
 				tick++;
 				tps++;
 
 				switch(menuSwitch) {
 				case 1:
 					game();
+					drawGrid(g);
+					drawEnts(g);
+					checkCollisions();
+					drawSelection(g);
+					pause.draw(g);
+					//Drawing entities and blocks
 					break;
 				case 2:
 					winWidth = getWidth()-tileWidth*4;
@@ -368,7 +277,21 @@ public class Main extends JFrame{
 		setVisible(true);
 	}
 
-	public void resetGame() {
+	public void pauseGame(int x, int y) {
+		if(x > pause.x &&
+				x <= pause.x + pause.size*(pause.s.length()+2) &&
+				y-barLength > pause.y &&
+				y-barLength <= pause.y+pause.size+tileWidth/2) {
+			menuSwitch = 4;
+
+			winWidth = getWidth();
+			winHeight = getHeight();
+			reAdjust();
+		}	
+	}
+
+
+	public static void resetGame() {
 		song = false;
 		clip.stop();
 		music("Songgame.wav");
@@ -380,7 +303,10 @@ public class Main extends JFrame{
 		towers = new ArrayList<Tower>();
 		bloodSpots = new ArrayList<BloodSpot>();
 		placedTowers = new ArrayList<Dimension>();
+		WaveHandler.enemies = 1;
+		WaveHandler.prevEnemies = 1;
 	}
+
 	public void game() {
 		//Run each tick
 		game = true;
@@ -398,7 +324,7 @@ public class Main extends JFrame{
 		}
 		if(playerHealth <= 0) {
 			playerHealth = 0;
-			menuSwitch = 2;
+			//menuSwitch = 2;
 		}
 
 
@@ -410,16 +336,19 @@ public class Main extends JFrame{
 		for(int k = 0; k < towers.size();k++) {
 			for(int i = 0;i< towers.get(k).projectiles.size();i++) {
 				towers.get(k).projectiles.get(i).move();
-				if(towers.get(k).projectiles.get(i).x < 0 || towers.get(k).projectiles.get(i).y < 0)
+				if(towers.get(k).projectiles.get(i).x < 0 || towers.get(k).projectiles.get(i).y < 0) {
+					towers.get(k).projectiles.set(i, null);
 					towers.get(k).projectiles.remove(i);
+				}
 			}
 		}
 		//Move projectiles and remove them if they go offscreen
 
-		if(tick % 40 == 0) {
-			enemies.add(new Enemy(3,0,3, rand(1,2)));
-		}
-		//Spawn enemies randomly between a certain tick interval
+		//if(tick % 40 == 0) {
+		//enemies.add(new Enemy(3,0,3, rand(1,2)));
+		//}
+		waveHandler.runRound();
+		//Spawn enemies based on round pattern
 
 		if(enemies.size() > 0 && towers.size()>0)
 			for(Tower k : towers)
@@ -427,18 +356,22 @@ public class Main extends JFrame{
 		//Fire towers
 
 		if(tick % 1000 == 0) {
-			if(bloodSpots.size() > 0)
-				bloodSpots = new ArrayList<BloodSpot>();
+			for(int i = 0; i < bloodSpots.size(); i++) {
+				bloodSpots.set(i, null);
+				bloodSpots.remove(i);
+				i--;
+			}
 		}
 		//Clear blood spots every interval
+		//System.gc();
 	}
 
-	public int rand(int min, int max) {
+	public static int rand(int min, int max) {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
 	}
 
 	public void checkCollisions() {
-
+		
 		try {
 			for(int i = 0; i < enemies.size();i++) { 
 				for(int k = 0; k < towers.size(); k++)
@@ -449,20 +382,24 @@ public class Main extends JFrame{
 							if(towers.get(k).projectiles.get(j).y >= obj.Y*tileHeight+obj.animY-towers.get(k).projectiles.get(j).height && 
 							towers.get(k).projectiles.get(j).y <= obj.Y*tileHeight+obj.animY+tileHeight) {
 								if(enemies.get(i).health <= 1) { 
-									bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
+									//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
+									enemies.set(i, null);
 									enemies.remove(i);
 									playerMoney+=10;
 								}
 								else {
 									enemies.get(i).health-= towers.get(k).projectiles.get(j).damage;
 									if(enemies.get(i).health <= 1) { 
-										bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
+										//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
+										enemies.set(i, null);
 										enemies.remove(i);
 										playerMoney+=10;
 									}
 								}
-								if(towers.get(k).projectiles.get(j).pierce <= 1)
+								if(towers.get(k).projectiles.get(j).pierce <= 1) {
+									towers.get(k).projectiles.set(j, null);
 									towers.get(k).projectiles.remove(j);
+								}
 								else 
 									towers.get(k).projectiles.get(j).pierce--;
 
@@ -470,9 +407,17 @@ public class Main extends JFrame{
 							}
 						//Check the collisions between the midpoints of the projectile and the enemy
 
+						if(towers.get(k).projectiles.get(j).x > winWidth 
+								|| towers.get(k).projectiles.get(j).y > winHeight
+								|| towers.get(k).projectiles.get(j).x < 0
+								|| towers.get(k).projectiles.get(j).y < 0) {
+							towers.get(k).projectiles.set(j, null);
+							towers.get(k).projectiles.remove(j);
+						}
 					}
 				if(map[enemies.get(i).X][enemies.get(i).Y] == 2) {
 					playerHealth-= enemies.get(i).damage;
+					enemies.set(i, null);
 					enemies.remove(i);
 				} 
 				//remove enemies if they go to the marked spot
@@ -536,12 +481,13 @@ public class Main extends JFrame{
 		for(Entity k: bloodSpots) {
 			k.draw(g);
 		}
-		for(Entity k : enemies) {
-			k.draw(g);
-		}
 		for(Entity k : towers) {
 			k.draw(g);
 		}
+		for(Entity k : enemies) {
+			k.draw(g);
+		}
+
 		if(selectedTower != 0)
 			towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
 		//Draw all entities
@@ -565,6 +511,7 @@ public class Main extends JFrame{
 			buttonImg = ImageIO.read(new File("button.png"));
 			menuBack = ImageIO.read(new File("bg.jpg"));
 			selection = ImageIO.read(new File("gradient.png"));
+			bossTexture = ImageIO.read(new File("REDBOSS.png"));;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -612,14 +559,26 @@ public class Main extends JFrame{
 		Graphics2D g2= (Graphics2D) g;
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 		g.drawImage(Tower1.initializeTexture(), winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
-
+		g.drawImage(Tower2.initializeTexture(), winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
+		g.drawImage(Tower3.initializeTexture(), winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
 		if(towerSelection == 1) {
 			g.drawImage(Tower1.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
 			g.fillOval((int)((mouseX/tileWidth-Tower1.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower1.defaultRange)*Main.tileHeight), (int) ((Tower1.defaultRange*2+1)*Main.tileWidth), (int)((Tower1.defaultRange*2+1)*Main.tileHeight));
 		}
+		else if(towerSelection == 2) {
+			g.drawImage(Tower2.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mouseX/tileWidth-Tower2.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower2.defaultRange)*Main.tileHeight), (int) ((Tower2.defaultRange*2+1)*Main.tileWidth), (int)((Tower2.defaultRange*2+1)*Main.tileHeight));
+		}
+		else if(towerSelection == 3) {
+			g.drawImage(Tower3.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mouseX/tileWidth-Tower3.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower3.defaultRange)*Main.tileHeight), (int) ((Tower3.defaultRange*2+1)*Main.tileWidth), (int)((Tower3.defaultRange*2+1)*Main.tileHeight));
+		}
 	}
-	public static void music(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it
+
+	public static void music(String songName) {
 
 		try {
 			audio = AudioSystem.getAudioInputStream(new File(songName));
@@ -630,27 +589,32 @@ public class Main extends JFrame{
 
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			volume.setValue((float) vol);
-
-
 		}
 		catch(Exception e) {
 			System.out.println(e.toString());
 		}
 	}
-	public static void soundEffect(String songName) { // grabs random a random .wav file and plays the song continuously, until the player changes it
 
+
+	public void reAdjust(){
+		tileHeight = winHeight/gridHeight;
+		tileWidth = winWidth/gridWidth;
+		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
+		for(Tower k : towers) {
+			k.width = Main.tileWidth;
+			k.height = Main.tileHeight;
+			k.x = k.mapX * Main.tileWidth+Main.tileWidth/2;
+			k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
+		}
+		for(Enemy k : enemies) {
+			k.readjust();
+		}
 		try {
-			audio = AudioSystem.getAudioInputStream(new File(songName));
-			clip = AudioSystem.getClip();
-			clip.open(audio);
-			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			volume.setValue((float) volumeEff);
-			clip.start();
+			menu.readjust();
 		}
-		catch(Exception e) {
-			System.out.println(e.toString());
-		}
+		catch(Exception e1) {}
 	}
+
 	public static void main(String args[]) {new Main();}
 
 }

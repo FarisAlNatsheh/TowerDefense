@@ -18,8 +18,8 @@ public class StatWindow extends Component{
 	int selectedTower;
 	public void initializeTextures() {
 		try {
-			texture = ImageIO.read(new File("window.png"));
-			texture = texture.getSubimage(0, 0, 384, 570);
+			texture = ImageIO.read(new File("gradient.png"));
+			//texture = texture.getSubimage(0, 0, 384, 570);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +38,7 @@ public class StatWindow extends Component{
 		sell = new Button((x-1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
 		upgrade = new Button((x-1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
 
-	
+
 	}
 	public void draw(Graphics g) {
 		g.setColor(new Color(20,20,70));
@@ -52,29 +52,30 @@ public class StatWindow extends Component{
 	}
 	public void click(int mouseX, int mouseY, int selectedTower) {
 		if(selectedTower > 0) {
-				visible = true;
-				this.selectedTower = selectedTower;
-		}else
+			visible = true;
+			this.selectedTower = selectedTower;
+		}
+		else
 			visible = false;
-		
 		if(mouseX > sell.x &&
 				mouseX <= sell.x + sell.size*(sell.s.length()+2) &&
 				mouseY-Main.barLength > sell.y &&
-				mouseY-Main.barLength <= sell.y+sell.size) {
+				mouseY-Main.barLength <= sell.y+sell.size+Main.tileWidth/4) {
 			Main.playerMoney += Main.towers.get(this.selectedTower-1).price/2;
 			Main.towers.remove(this.selectedTower-1);
-			
+			Main.placedTowers.remove(this.selectedTower-1);
 		}
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
-				mouseY-Main.barLength <= upgrade.y+upgrade.size && Main.playerMoney >= 25) {
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
 			if(Main.towers.get(this.selectedTower-1).speed > 1)
 				Main.towers.get(this.selectedTower-1).speed--;
 			Main.towers.get(this.selectedTower-1).range++;
 			Main.playerMoney-=	Main.towers.get(this.selectedTower-1).price/2;
-			Main.towers.get(this.selectedTower-1).price+= 25;
+			Main.towers.get(this.selectedTower-1).price+= Main.towers.get(this.selectedTower-1).price;
 		}
-		
+
 	}
+
 }

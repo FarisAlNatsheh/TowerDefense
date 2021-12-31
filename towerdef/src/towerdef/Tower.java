@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Tower extends Entity{
+public abstract class Tower extends Entity{
 	public int x;
 	public int y;
 	public int mapX;
@@ -23,8 +23,9 @@ public class Tower extends Entity{
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	int hitCount;
 	int projType;
+	int damage;
 	BufferedImage texture;
-	public Tower(int x, int y, int pierce, int price, double range,int speed, int projType, BufferedImage texture) {
+	public Tower(int x, int y, int pierce, int price, double range,int speed, int projType, BufferedImage texture, int damage) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;
 		this.y = y*Main.tileHeight+Main.tileHeight/2;
 		this.pierce = pierce;
@@ -33,6 +34,7 @@ public class Tower extends Entity{
 		this.speed = speed;
 		this.projType = projType;
 		this.texture = texture;
+		this.damage = damage;
 		mapX = x;
 		mapY = y;
 	}
@@ -81,8 +83,7 @@ public class Tower extends Entity{
 			//Calculate angle
 			
 			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x,y, target, pierce,projType));
-				Main.soundEffect("laser4.wav"); //credit dklon
+				projectiles.add(new Projectile(x,y, target, pierce,projType, damage));
 			}
 			//Create new projectile at the towers location
 		}

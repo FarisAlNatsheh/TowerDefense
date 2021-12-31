@@ -7,9 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Tower1 extends Tower {
-	static double defaultRange = 2;
+	static double defaultRange = 3;
 	public Tower1(int x, int y) {
-		super(x, y, 10, 50, defaultRange, 10,0, initializeTexture());
+		super(x, y, 10, 100, defaultRange, 30,0, initializeTexture(),4);
 	}
 	public static BufferedImage initializeTexture() {
 		BufferedImage texture = null;
