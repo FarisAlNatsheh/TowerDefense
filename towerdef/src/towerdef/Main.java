@@ -556,7 +556,6 @@ public class Main extends JFrame{
 	}
 
 	public void drawSelection(Graphics g) {
-		Graphics2D g2= (Graphics2D) g;
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 		g.drawImage(Tower1.initializeTexture(), winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
 		g.drawImage(Tower2.initializeTexture(), winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
@@ -578,6 +577,7 @@ public class Main extends JFrame{
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public static void music(String songName) {
 
 		try {

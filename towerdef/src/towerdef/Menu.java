@@ -1,13 +1,11 @@
 package towerdef;
 
-import java.awt.Color;
-import java.awt.Dimension;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
 
 
 public class Menu {
@@ -168,8 +166,6 @@ public class Menu {
 		}
 
 		if(e.getButton() == MouseEvent.BUTTON3) {Main.towerSelection = 0;}
-		int mouseX= x/Main.tileWidth;
-		int mouseY= (x-Main.barLength)/Main.tileHeight;
 		/////////////////////////////////////////////////////////////////////
 		Main.placeTower(x, y);
 	}

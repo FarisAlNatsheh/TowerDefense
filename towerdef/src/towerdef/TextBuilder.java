@@ -19,7 +19,6 @@ public class TextBuilder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		int scale = 16;
 		int sheetHeight = sheet.getHeight(null)/16;
 		int sheetWidth = sheet.getWidth(null)/18;
 		textures = new BufferedImage[sheetWidth][sheetHeight];
