@@ -53,7 +53,7 @@ public class Main extends JFrame{
 	static int[][] map = new int[gridWidth][gridHeight];
 	//Rendering variables
 
-	static int playerHealth = 100, playerMoney = 102222220, wave = 1;
+	static int playerHealth = 100, playerMoney = 100, wave = 1;
 	//Game stats
 
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
