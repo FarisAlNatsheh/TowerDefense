@@ -1,5 +1,4 @@
 package towerdef;
-//LASER SOUND
 //GUI CraftPix.net 2D Game Assets buttons and windows
 //Xavier4321 turret: The original pic's are from Scorpio's Construction Kit2. Check it out here (http://opengameart.org/content/space-ship-construction-kit)
 //Xavier4321 bot Made with Wuditog's Parts2 App (https://www.arrall.com/part2art/). Parts from Scorpio (http://opengameart.org/content/space-ship-construction-kit)
@@ -220,7 +219,7 @@ public class Main extends JFrame{
 			public void paint(Graphics g) {
 				//Game loop
 				startTime = System.currentTimeMillis();
-				try {Thread.sleep(0);} 
+				try {Thread.sleep(delay);} 
 				catch (InterruptedException e) {}
 		
 				repaint();
@@ -324,7 +323,7 @@ public class Main extends JFrame{
 		}
 		if(playerHealth <= 0) {
 			playerHealth = 0;
-			//menuSwitch = 2;
+			menuSwitch = 2;
 		}
 
 

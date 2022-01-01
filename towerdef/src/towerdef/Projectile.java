@@ -41,7 +41,6 @@ public class Projectile extends Entity{
 		angle = Math.atan((double)initialYdif/initialXdif);
 
 		//Calcualtes the angle between projectile and targeted enemy
-
 		this.pierce = pierce;
 		if(type == 0) {
 			speedX = Main.tileWidth/2;

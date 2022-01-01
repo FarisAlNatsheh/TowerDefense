@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JOptionPane;
+
 
 
 public class Menu {
@@ -13,7 +15,7 @@ public class Menu {
 	BufferedImage[] bldTexture;
 	public int anim = 0;
 	public static int size=Main.tileWidth*2;
-	Button[] components = new Button[4];
+	Button[] components = new Button[5];
 	Button[] settingsComps = new Button[7];
 	int vol = 70, volumeEff = 70;
 	
@@ -37,6 +39,7 @@ public class Menu {
 		Main.builder.drawString(g, "TOWER DEFENSE", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*3, Main.tileWidth);
 		for(int i =0; i < 3; i++)
 			components[i].draw(g);
+		components[4].draw(g);
 	}
 	void settings(Graphics g) {
 		g.drawImage(Main.menuBack,0,0,Main.winWidth, Main.winHeight, null);
@@ -84,6 +87,23 @@ public class Menu {
 				case 1:Main.menuSwitch =  4;break;
 				case 2:
 					System.exit(1);break;
+				case 4:
+				       JOptionPane.showMessageDialog(null, 
+				                "Gun Mine (Blue turret): Xavier4321 turret: The original pic's are from Scorpio's Construction Kit2. Check it out here (http://opengameart.org/content/space-ship-construction-kit)\r\n" + 
+				                "Space Marine: Xavier4321 Made with Wuditog's Parts2 App (https://www.arrall.com/part2art/). Parts from Scorpio (http://opengameart.org/content/space-ship-construction-kit)\r\n" + 
+				                "Titan (Orane turret):Credit Skorpio for the kit and Kanadaj for the design either on the start-screen, menu, end-screen or credits screen.\r\n" + 
+				                "Blue turret laser sound by dklon \r\n" + 
+				                "Orange turret sound: Link To mobeyee.com\r\n"+
+				                "drakzlin Game space background \r\n"+
+				                "Glimmervoid Menu space background \r\n"+
+				                "\"96 x 96 Space Ship\" by phobi licensed CC-BY 3.0: https://opengameart.org/content/96-x-96-space-ship \r\n"+
+				                "\"Various Spaceship Models\" by Sypher Zent licensed CC-BY-SA 3.0: https://opengameart.org/content/various-spaceship-models \r\n"+
+				                "\"Spaceship Boss\" by MattBolere licensed CC-BY-SA 4.0: https://opengameart.org/content/spaceship-boss \r\n"+
+				                "\"Space Shooter Game User Interface\" by CraftPix.net 2D Game Assets licensed OGA-BY 3.0: https://opengameart.org/content/space-shooter-game-user-interface \r\n"+
+				                "\"Boxy Bold Font\" by Clint Bellanger & split by cemkalyoncu",
+				                "Credits",
+				                JOptionPane.INFORMATION_MESSAGE);
+					break;
 				}
 
 			}
@@ -130,10 +150,15 @@ public class Menu {
 						}
 						else{
 							Main.clip.stop();
+						
 							if(Main.playerHealth > 50)
 								Main.music("Songgame.wav");
 							else
 								Main.music("intense.wav");
+							if(Boss.playing) {
+								Main.clip.stop();
+								Main.music("boss song.wav");
+							}
 							Main.menuSwitch = 1;
 						}
 						break;
@@ -174,7 +199,8 @@ public class Menu {
 		components[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ Main.tileHeight,"Settings", Main.tileWidth));
 		components[2] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2+ 3*Main.tileHeight,"Quit", Main.tileWidth));
 		components[3] = new Button(Main.winWidth/2-2*size, Main.winHeight/2+Main.tileHeight*2, "Restart", size/2);
-
+		components[4] = new Button(0,0, "Credits", size/8);
+		
 		settingsComps[0] = (new Button(Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2- Main.tileHeight*3,"Fullscreen", Main.tileWidth));
 		settingsComps[1] = (new Button(Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2- Main.tileHeight/2,"+", Main.tileWidth));
 		settingsComps[2] = (new Button(Main.winWidth/2+ Main.tileWidth*2, Main.winHeight/2- Main.tileHeight/2,"-", Main.tileWidth));
