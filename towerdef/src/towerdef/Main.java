@@ -246,10 +246,12 @@ public class Main extends JFrame{
 				switch(menuSwitch) {
 				case 1:
 					game();
+					g.setColor(Color.black);
+					g.fillRect(0,0,winWidth,winHeight);
 					drawGrid(g);
-					drawEnts(g);
+					//drawEnts(g);
 					checkCollisions();
-					drawSelection(g);
+					//drawSelection(g);
 					pause.draw(g);
 					//Drawing entities and blocks
 					break;
