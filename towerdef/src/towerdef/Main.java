@@ -249,7 +249,7 @@ public class Main extends JFrame{
 					g.setColor(Color.black);
 					g.fillRect(0,0,winWidth,winHeight);
 					drawGrid(g);
-					//drawEnts(g);
+					drawEnts(g);
 					checkCollisions();
 					//drawSelection(g);
 					pause.draw(g);
