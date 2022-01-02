@@ -70,7 +70,6 @@ public class Menu {
 		setUpComponents();
 	}
 	public void menuClick(int mouseX, int mouseY) {
-
 		for(int i = 0; i < components.length; i++) {
 			Button k = components[i];
 			if(mouseX > k.x &&
@@ -110,6 +109,19 @@ public class Menu {
 
 		}
 
+	}
+	public void menuAnimate(int mouseX, int mouseY) {
+		for(int i = 0; i < components.length; i++) {
+			Button k = components[i];
+			if(mouseX > k.x &&
+					mouseX <= k.x + k.size*(k.s.length()+2) &&
+					mouseY-Main.barLength > k.y &&
+					mouseY-Main.barLength <= k.y+k.size+Main.tileWidth/4) {
+				k.hold();
+
+			}
+
+		}
 	}
 
 	public void deathClick(int mouseX, int mouseY) {
@@ -179,6 +191,41 @@ public class Menu {
 						return;
 					}
 				}
+			}
+
+		}
+	}
+	public void settingsAnimate(int mouseX, int mouseY) {
+		for(int i = 0; i < settingsComps.length; i++) {
+			Button k = settingsComps[i];
+			if(mouseX > k.x &&
+					mouseX <= k.x + k.size*(k.s.length()+2) &&
+					mouseY-Main.barLength > k.y &&
+					mouseY-Main.barLength <= k.y+k.size+Main.tileWidth/4) {
+				k.hold();
+			}
+
+		}
+	}
+	public void release(int mouseX, int mouseY) {
+		for(int i = 0; i < settingsComps.length; i++) {
+			Button k = settingsComps[i];
+			if(mouseX > k.x &&
+					mouseX <= k.x + k.size*(k.s.length()+2) &&
+					mouseY-Main.barLength > k.y &&
+					mouseY-Main.barLength <= k.y+k.size+Main.tileWidth/4) {
+				k.release();
+			}
+
+		}
+		for(int i = 0; i < components.length; i++) {
+			Button k = components[i];
+			if(mouseX > k.x &&
+					mouseX <= k.x + k.size*(k.s.length()+2) &&
+					mouseY-Main.barLength > k.y &&
+					mouseY-Main.barLength <= k.y+k.size+Main.tileWidth/4) {
+				k.release();
+
 			}
 
 		}

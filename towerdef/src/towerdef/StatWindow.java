@@ -38,7 +38,6 @@ public class StatWindow extends Component{
 		sell = new Button((x-1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
 		upgrade = new Button((x-1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
 
-
 	}
 	public void draw(Graphics g) {
 		g.setColor(new Color(20,20,70));
@@ -76,6 +75,38 @@ public class StatWindow extends Component{
 			Main.towers.get(this.selectedTower-1).price+= Main.towers.get(this.selectedTower-1).price;
 		}
 
+	}
+	public void animate(int mouseX, int mouseY) {
+		if(mouseX > sell.x &&
+				mouseX <= sell.x + sell.size*(sell.s.length()+2) &&
+				mouseY-Main.barLength > sell.y &&
+				mouseY-Main.barLength <= sell.y+sell.size+Main.tileWidth/4) {
+			sell.hold();
+		
+		}
+		if(mouseX > upgrade.x &&
+				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
+				mouseY-Main.barLength > upgrade.y &&
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
+			upgrade.hold();
+		
+		}
+	}
+	public void release(int mouseX, int mouseY) {
+		if(mouseX > sell.x &&
+				mouseX <= sell.x + sell.size*(sell.s.length()+2) &&
+				mouseY-Main.barLength > sell.y &&
+				mouseY-Main.barLength <= sell.y+sell.size+Main.tileWidth/4) {
+			sell.release();
+		
+		}
+		if(mouseX > upgrade.x &&
+				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
+				mouseY-Main.barLength > upgrade.y &&
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
+			upgrade.release();
+		
+		}
 	}
 
 }

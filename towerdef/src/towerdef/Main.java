@@ -64,7 +64,7 @@ public class Main extends JFrame{
 	//for drawing strings with sprite font
 
 	static BufferedImage[] enemyTexture, enemyTexture2;
-	static BufferedImage projectileImg, blood, bgImg, bloodAnim, buttonImg, menuBack, selection, bossTexture;
+	static BufferedImage projectileImg, blood, bgImg, bloodAnim, menuBack, selection, bossTexture;
 	static BufferedImage[][] textures;
 	//textures
 
@@ -89,7 +89,7 @@ public class Main extends JFrame{
 	static int towerSelection = 0;
 	static int barLength = 31;
 	boolean fullscreen;
-	static boolean game;
+	static boolean game, adjust;
 	static StatWindow stats;
 	Button pause;
 
@@ -148,7 +148,7 @@ public class Main extends JFrame{
 			barLength = 31;
 		}
 	}
-
+	int mouseXi, mouseYi;
 	public Main() {
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
@@ -170,23 +170,38 @@ public class Main extends JFrame{
 		});
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+				mouseXi = e.getX();
+				mouseYi = e.getY();
 				if(menuSwitch == 1) {
-					pauseGame(e.getX(), e.getY());
-					menu.gameClick(e.getX(), e.getY(), e);
-						stats.click(e.getX(), e.getY(), Main.selectedTower);
+					menu.gameClick(mouseXi, mouseYi, e);
+						stats.animate(mouseXi, mouseYi);
 				}
 				else if(menuSwitch == 2) 
-					menu.deathClick(e.getX(), e.getY());
+					menu.deathClick(mouseXi, mouseYi);
 				else if(menuSwitch == 3)
-					menu.menuClick(e.getX(), e.getY());
+					menu.menuAnimate(mouseXi, mouseYi);
 				else if(menuSwitch == 4)
-					menu.settingsClick(e.getX(), e.getY());
+					menu.settingsAnimate(mouseXi, mouseYi);
+			}
+			public void mouseReleased(MouseEvent e) {
+				if(menuSwitch == 1) {
+					pauseGame(mouseXi, mouseYi);
+					menu.gameClick(mouseXi, mouseYi, e);
+						stats.click(mouseXi, mouseYi, Main.selectedTower);
+				}
+				else if(menuSwitch == 2) 
+					menu.deathClick(mouseXi, mouseYi);
+				else if(menuSwitch == 3) {
+					menu.menuClick(mouseXi, mouseYi);
+				}
+				else if(menuSwitch == 4) {
+					menu.settingsClick(mouseXi, mouseYi);
+				}
 				if(toggleFullscreen) {
 					setFullscreen();
 					toggleFullscreen = false;
 				}
-			}
-			public void mouseReleased(MouseEvent e) {
+				menu.release(mouseXi, mouseYi);
 				placeTower(e.getX(), e.getY());
 			}
 		});
@@ -260,6 +275,7 @@ public class Main extends JFrame{
 				}
 
 				//TPS counter
+				g.setColor(Color.white);
 				g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
 				if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
 					delay++;
@@ -311,7 +327,9 @@ public class Main extends JFrame{
 		game = true;
 		winWidth = getWidth()-tileWidth*4;
 		winHeight = getHeight();
-		reAdjust();
+		if(tick%10 == 0) {
+			reAdjust();
+		}
 		checkCollisions();
 		if(playerHealth <= 50) {
 			if(!song) {
@@ -343,9 +361,7 @@ public class Main extends JFrame{
 		}
 		//Move projectiles and remove them if they go offscreen
 
-		//if(tick % 40 == 0) {
-		//enemies.add(new Enemy(3,0,3, rand(1,2)));
-		//}
+
 		waveHandler.runRound();
 		//Spawn enemies based on round pattern
 
@@ -362,7 +378,6 @@ public class Main extends JFrame{
 			}
 		}
 		//Clear blood spots every interval
-		//System.gc();
 	}
 
 	public static int rand(int min, int max) {
@@ -384,6 +399,7 @@ public class Main extends JFrame{
 									//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
 									enemies.set(i, null);
 									enemies.remove(i);
+									Boss.playing = false;
 									playerMoney+=10;
 								}
 								else {
@@ -392,6 +408,7 @@ public class Main extends JFrame{
 										//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
 										enemies.set(i, null);
 										enemies.remove(i);
+										Boss.playing = false;
 										playerMoney+=10;
 									}
 								}
@@ -418,6 +435,7 @@ public class Main extends JFrame{
 					playerHealth-= enemies.get(i).damage;
 					enemies.set(i, null);
 					enemies.remove(i);
+					Boss.playing = false;
 				} 
 				//remove enemies if they go to the marked spot
 			}
@@ -507,7 +525,6 @@ public class Main extends JFrame{
 			blood = ImageIO.read(new File("blood.png"));
 			bgImg = ImageIO.read(new File("background.png"));
 			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
-			buttonImg = ImageIO.read(new File("button.png"));
 			menuBack = ImageIO.read(new File("bg.jpg"));
 			selection = ImageIO.read(new File("gradient.png"));
 			bossTexture = ImageIO.read(new File("REDBOSS.png"));;
