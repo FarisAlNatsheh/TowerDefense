@@ -26,6 +26,10 @@ public class WaveHandler {
 				prevEnemies += Main.wave*2;
 			else
 				healthAddition += 0.05;
+			if(Enemy.value > 0.1)
+				Enemy.value -= 0.15;
+			if(Enemy.value < 0.15)
+				Enemy.value = 0.15;
 			enemies = prevEnemies;
 			if(bossAdded) {
 				Main.clip.stop();

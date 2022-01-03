@@ -88,16 +88,17 @@ public class Menu {
 					System.exit(1);break;
 				case 4:
 				       JOptionPane.showMessageDialog(null, 
-				                "Gun Mine (Blue turret): Xavier4321 turret: The original pic's are from Scorpio's Construction Kit2. Check it out here (http://opengameart.org/content/space-ship-construction-kit)\r\n" + 
-				                "Space Marine: Xavier4321 Made with Wuditog's Parts2 App (https://www.arrall.com/part2art/). Parts from Scorpio (http://opengameart.org/content/space-ship-construction-kit)\r\n" + 
-				                "Titan (Orane turret):Credit Skorpio for the kit and Kanadaj for the design either on the start-screen, menu, end-screen or credits screen.\r\n" + 
-				                "Blue turret laser sound by dklon \r\n" + 
-				                "Orange turret sound: Link To mobeyee.com\r\n"+
 				                "drakzlin Game space background \r\n"+
 				                "Glimmervoid Menu space background \r\n"+
+				                "Orange turret laser fire by farfadet46\r\n"+
+				                "\"Titan battlecruiser\" by kanadaj licensed CC-BY 3.0: https://opengameart.org/content/titan-battlecruiser Credit Skorpio for the kit and Kanadaj for the design either on the start-screen, menu, end-screen or credits screen.\r\n"+
+				                "\"Gun Mine.\" by Xavier4321 licensed CC-BY 3.0: https://opengameart.org/content/gun-mine The original pic's are from Scorpio's Construction Kit2. Check it out here (http://opengameart.org/content/space-ship-construction-kit)\r\n" + 
+				                "\"Parts2 ART Space Marine.\" by Xavier4321 licensed CC-BY 3.0: https://opengameart.org/content/parts2-art-space-marine Made with Wuditog's Parts2 App (https://www.arrall.com/part2art/). Parts from Scorpio (http://opengameart.org/content/space-ship-construction-kit) Great work. ;)\r\n" + 
 				                "\"96 x 96 Space Ship\" by phobi licensed CC-BY 3.0: https://opengameart.org/content/96-x-96-space-ship \r\n"+
-				                "\"Various Spaceship Models\" by Sypher Zent licensed CC-BY-SA 3.0: https://opengameart.org/content/various-spaceship-models \r\n"+
-				                "\"Spaceship Boss\" by MattBolere licensed CC-BY-SA 4.0: https://opengameart.org/content/spaceship-boss \r\n"+
+				                "\"Laser Shot\" by Mobeyee Sounds licensed CC-BY 4.0: https://opengameart.org/content/laser-shot-0 Link To mobeyee.com\r\n"+
+				                "\"Laser Fire\" by dklon licensed CC-BY 3.0: https://opengameart.org/content/laser-fire \r\n"+
+				                "\"Various Spaceship Models\" by Sypher Zent licensed CC-BY-SA 3.0: https://opengameart.org/content/various-spaceship-models Original artwork by Skorpio. Ship model design by SypherZent. \r\n"+
+				                "\"Spaceship Boss\" by MattBolere licensed CC-BY-SA 4.0: https://opengameart.org/content/spaceship-boss Credit to Skorpio for the ariginal assets https://opengameart.org/users/skorpio\r\n" +
 				                "\"Space Shooter Game User Interface\" by CraftPix.net 2D Game Assets licensed OGA-BY 3.0: https://opengameart.org/content/space-shooter-game-user-interface \r\n"+
 				                "\"Boxy Bold Font\" by Clint Bellanger & split by cemkalyoncu",
 				                "Credits",

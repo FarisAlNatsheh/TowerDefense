@@ -27,8 +27,8 @@ public class StatWindow extends Component{
 	public void adjust() {
 		width = Main.tileWidth*5;
 		height = Main.tileHeight*4;
-		sell = new Button((x-1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
-		upgrade = new Button((x-1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
+		sell = new Button((x+1)*Main.tileWidth+Main.tileWidth/2,(y+3)*Main.tileHeight,"Sell", Main.tileWidth/3);
+		upgrade = new Button((x+1)*Main.tileWidth,(y+1)*Main.tileHeight,"Upgrade", Main.tileWidth/3);
 
 	}
 	public StatWindow(int x, int y) {
@@ -67,7 +67,7 @@ public class StatWindow extends Component{
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
-				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= Main.towers.get(this.selectedTower-1).price/2) {
 			if(Main.towers.get(this.selectedTower-1).speed > 1)
 				Main.towers.get(this.selectedTower-1).speed--;
 			Main.towers.get(this.selectedTower-1).range++;
@@ -87,7 +87,7 @@ public class StatWindow extends Component{
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
-				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4) {
 			upgrade.hold();
 		
 		}
@@ -103,7 +103,7 @@ public class StatWindow extends Component{
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
-				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4 && Main.playerMoney >= 25) {
+				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4) {
 			upgrade.release();
 		
 		}

@@ -57,6 +57,8 @@ public class Projectile extends Entity{
 			speedY= Main.tileHeight;
 			play(new File("Laser Shot.wav"));
 		}
+		//speedX = 0;
+		//speedY = 0;
 
 	}
 	public void play(File file) {
@@ -108,9 +110,11 @@ public class Projectile extends Entity{
 	}
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		g2.rotate(angle, x,y);
-		g2.drawImage(Main.projectileImg,(int)x, (int)y, width, height,null);
-		g2.rotate(angle * -1, x,y);
+		g2.rotate(angle , x,y- height/2);
+		g2.drawImage(Main.projectileImg,(int)x-width/2, (int)y- height/2, width, height,null);
+		g2.rotate(angle * -1, x,y- height/2);
+
+		
 	}
 	//Draw projectile based on rotation
 }

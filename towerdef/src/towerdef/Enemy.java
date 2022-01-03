@@ -10,6 +10,7 @@ public class Enemy extends Entity{
 	public double  animX, animY, anim, speedX, speedY;
 	public BufferedImage texture = Main.enemyTexture[0];
 	int type;
+	static double value = 5;
 	//Texture & Movement flags directions
 
 	//0 left 9

@@ -53,7 +53,8 @@ public class Main extends JFrame{
 	static int[][] map = new int[gridWidth][gridHeight];
 	//Rendering variables
 
-	static int playerHealth = 100, playerMoney = 100, wave = 1;
+	static int playerHealth = 100, wave = 1;
+	static double playerMoney = 100;
 	//Game stats
 
 	static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -363,6 +364,14 @@ public class Main extends JFrame{
 			drawSelection(g);
 			pause.draw(g);
 			//Drawing entities and blocks
+			
+			builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
+			builder.drawString(g, new StringBuilder("Money:").append((int)playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
+			builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
+
+			//Draw text
+			if(stats.visible)
+				stats.draw(g);
 			break;
 		case 2:
 			winWidth = getWidth()-tileWidth*4;
@@ -377,6 +386,7 @@ public class Main extends JFrame{
 			menu.settings(g);
 			break;
 		}
+		
 
 
 		if(song) {
@@ -385,6 +395,7 @@ public class Main extends JFrame{
 			g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
 		}
 
+		
 		//TPS counter
 		g.setColor(Color.white);
 		g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
@@ -418,7 +429,7 @@ public class Main extends JFrame{
 									enemies.set(i, null);
 									enemies.remove(i);
 									Boss.playing = false;
-									playerMoney+=10;
+									playerMoney+=Enemy.value;
 								}
 								else {
 									enemies.get(i).health-= towers.get(k).projectiles.get(j).damage;
@@ -427,7 +438,7 @@ public class Main extends JFrame{
 										enemies.set(i, null);
 										enemies.remove(i);
 										Boss.playing = false;
-										playerMoney+=10;
+										playerMoney+=Enemy.value;
 									}
 								}
 								if(towers.get(k).projectiles.get(j).pierce <= 1) {
@@ -508,6 +519,7 @@ public class Main extends JFrame{
 		for(int i = 8; i < 11; i++) {
 			map[(gridWidth)/2+1][i] = 1;
 		}
+		//map[3][0] = 0;
 		map[(gridWidth)/2+1][12] = 1;
 		map[(gridWidth)/2+1][11] = 2;
 	}
@@ -526,13 +538,7 @@ public class Main extends JFrame{
 		if(selectedTower != 0)
 			towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
 		//Draw all entities
-		builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
-		builder.drawString(g, new StringBuilder("Money:").append(playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
-		builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
 
-		//Draw text
-		if(stats.visible)
-			stats.draw(g);
 	}
 
 	public void initializeTextures() {
@@ -652,8 +658,10 @@ public class Main extends JFrame{
 		}
 		try {
 			menu.readjust();
+			stats.adjust();
 		}
 		catch(Exception e1) {}
+		
 	}
 
 	public static void main(String args[]) {new Main();}
