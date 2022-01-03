@@ -285,7 +285,6 @@ public class Main extends JFrame{
 		WaveHandler.enemies = 1;
 		WaveHandler.prevEnemies = 1;
 	}
-
 	public void game() {
 		//Run each tick
 		game = true;
@@ -381,12 +380,15 @@ public class Main extends JFrame{
 			break;
 		case 3:
 			menu.mainMenu(g);
+			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
 			break;
 		case 4:
 			menu.settings(g);
+			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
 			break;
 		}
 		
+
 
 
 		if(song) {
@@ -601,8 +603,11 @@ public class Main extends JFrame{
 	public void drawSelection(Graphics g) {
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
 		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "100" , winWidth+tileWidth,tileHeight*2 , tileHeight/2);
 		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "350" , winWidth+tileWidth,tileHeight*5 , tileHeight/2);
 		g.drawImage(Tower3.texture, winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "50" , winWidth+tileWidth,tileHeight*8 , tileHeight/2);
 		if(towerSelection == 1) {
 			g.drawImage(Tower1.texture, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));

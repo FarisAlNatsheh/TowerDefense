@@ -61,6 +61,7 @@ public class Enemy extends Entity{
 		this.dir = startDir;
 		this.type = type;
 		setEnemy();
+		readjust();
 	}
 
 	public void checkSurr() {
