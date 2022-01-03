@@ -36,7 +36,7 @@ public class Boss extends Enemy{
 		angle+= Math.PI/-2;
 		Graphics2D g2 = (Graphics2D) g;
 		g2.rotate(angle, X*Main.tileWidth+animX+Main.tileWidth/2, Y*Main.tileHeight+animY+ Main.tileHeight/2);
-		g.drawImage(texture, Main.tileWidth*X+(int)animX - Main.tileWidth*3, Main.tileHeight*Y+(int)animY- Main.tileHeight*5, Main.tileWidth*6, Main.tileHeight*9, null);
+		g.drawImage(texture, Main.tileWidth*X+(int)animX - Main.tileWidth*3, Main.tileHeight*Y+(int)animY- Main.tileHeight*5, Main.tileWidth*7, Main.tileHeight*10, null);
 		g2.rotate((angle)*-1, X*Main.tileWidth+animX+Main.tileWidth/2, Y*Main.tileHeight+animY+ Main.tileHeight/2);
 
 		g.setColor(new Color(0,0,0));
