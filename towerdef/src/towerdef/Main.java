@@ -11,6 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -232,68 +233,27 @@ public class Main extends JFrame{
 		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
 			public void paint(Graphics g) {
-				//Game loop
-				startTime = System.currentTimeMillis();
-				try {Thread.sleep(delay);} 
-				catch (InterruptedException e) {}
-		
+				draw(g);
 				repaint();
-
-				
-				tick++;
-				tps++;
-
-				switch(menuSwitch) {
-				case 1:
-					game();
-					g.setColor(Color.black);
-					g.fillRect(0,0,winWidth,winHeight);
-					drawGrid(g);
-					drawEnts(g);
-					checkCollisions();
-					//drawSelection(g);
-					pause.draw(g);
-					//Drawing entities and blocks
-					break;
-				case 2:
-					winWidth = getWidth()-tileWidth*4;
-					winHeight = getHeight();
-					reAdjust();
-					menu.death(g);
-					break;
-				case 3:
-					menu.mainMenu(g);
-					break;
-				case 4:
-					menu.settings(g);
-					break;
-				}
-
-
-				if(song) {
-					Graphics2D g2 = (Graphics2D)g;
-					g2.setColor(new Color(255,0,0,30));
-					g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
-				}
-
-				//TPS counter
-				g.setColor(Color.white);
-				g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
-				if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
-					delay++;
-				else if(tps/((System.currentTimeMillis()-startTime)/1000.0) < targetTPS- 10)
-					if(delay != 0)
-						delay--;
-				tps = 0;
-
-
-			} 
+			}
 		};
-
+	
 		add(game);
+		
 		setVisible(true);
 	}
-
+	public void buffer() {
+		BufferStrategy bs = getBufferStrategy();
+		if(bs == null) {
+			createBufferStrategy(3);
+			return;
+		}
+		
+		Graphics g = bs.getDrawGraphics();
+		draw(g);
+		g.dispose();
+		bs.show();
+	}
 	public void pauseGame(int x, int y) {
 		if(x > pause.x &&
 				x <= pause.x + pause.size*(pause.s.length()+2) &&
@@ -381,7 +341,63 @@ public class Main extends JFrame{
 		}
 		//Clear blood spots every interval
 	}
+	public void draw(Graphics g) {
 
+		//Game loop
+		startTime = System.currentTimeMillis();
+		try {Thread.sleep(delay);} 
+		catch (InterruptedException e) {}
+
+		
+		tick++;
+		tps++;
+
+		switch(menuSwitch) {
+		case 1:
+			game();
+			g.setColor(Color.black);
+			g.fillRect(0,0,winWidth,winHeight);
+			drawGrid(g);
+			drawEnts(g);
+			checkCollisions();
+			drawSelection(g);
+			pause.draw(g);
+			//Drawing entities and blocks
+			break;
+		case 2:
+			winWidth = getWidth()-tileWidth*4;
+			winHeight = getHeight();
+			reAdjust();
+			menu.death(g);
+			break;
+		case 3:
+			menu.mainMenu(g);
+			break;
+		case 4:
+			menu.settings(g);
+			break;
+		}
+
+
+		if(song) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(new Color(255,0,0,30));
+			g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
+		}
+
+		//TPS counter
+		g.setColor(Color.white);
+		g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
+		if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
+			delay++;
+		else if(tps/((System.currentTimeMillis()-startTime)/1000.0) < targetTPS- 10)
+			if(delay != 0)
+				delay--;
+		tps = 0;
+
+
+	} 
+	
 	public static int rand(int min, int max) {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
 	}
