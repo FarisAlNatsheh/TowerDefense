@@ -45,17 +45,17 @@ public class Projectile extends Entity{
 		if(type == 0) {
 			speedX = Main.tileWidth/2;
 			speedY= Main.tileHeight/2;
-			play(new File("laser4.wav")); //credit dklon
+			play(new File("Sound/laser4.wav")); //credit dklon
 		}
 		else if(type == 1) {
 			speedX = Main.tileWidth/16;
 			speedY= Main.tileHeight/16;
-			play(new File("tir.wav")); //credit dklon
+			play(new File("Sound/tir.wav")); //credit dklon
 		}
 		else if(type == 2) {
 			speedX = Main.tileWidth;
 			speedY= Main.tileHeight;
-			play(new File("Laser Shot.wav"));
+			play(new File("Sound/Laser Shot.wav"));
 		}
 		//speedX = 0;
 		//speedY = 0;

@@ -18,7 +18,7 @@ public class StatWindow extends Component{
 	int selectedTower;
 	public void initializeTextures() {
 		try {
-			texture = ImageIO.read(new File("gradient.png"));
+			texture = ImageIO.read(new File("Textures/gradient.png"));
 			//texture = texture.getSubimage(0, 0, 384, 570);
 		} catch (IOException e) {
 			e.printStackTrace();

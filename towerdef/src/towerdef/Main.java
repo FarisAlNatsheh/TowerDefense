@@ -155,7 +155,7 @@ public class Main extends JFrame{
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
 		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
-		music("Menu.wav");
+		music("Sound/Menu.wav");
 		//Re-adjusting variables depending on screen size
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
@@ -273,7 +273,7 @@ public class Main extends JFrame{
 	public static void resetGame() {
 		song = false;
 		clip.stop();
-		music("Songgame.wav");
+		music("Sound/Songgame.wav");
 		menuSwitch = 1;
 		playerHealth= 100;
 		playerMoney = 100;
@@ -297,7 +297,7 @@ public class Main extends JFrame{
 			if(!song) {
 				clip.stop();
 				clip.stop();
-				music("intense.wav");
+				music("Sound/intense.wav");
 				song = true;
 			}
 		}
@@ -549,14 +549,14 @@ public class Main extends JFrame{
 		Tower3.initializeTexture();
 		BufferedImage sheet = null;
 		try {
-			sheet = ImageIO.read(new File("texturess.png"));
-			projectileImg = ImageIO.read(new File("laser.png"));
-			blood = ImageIO.read(new File("blood.png"));
-			bgImg = ImageIO.read(new File("background.png"));
-			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
-			menuBack = ImageIO.read(new File("bg.jpg"));
-			selection = ImageIO.read(new File("gradient.png"));
-			bossTexture = ImageIO.read(new File("REDBOSS.png"));
+			sheet = ImageIO.read(new File("Textures/texturess.png"));
+			projectileImg = ImageIO.read(new File("Textures/laser.png"));
+			blood = ImageIO.read(new File("Textures/blood.png"));
+			bgImg = ImageIO.read(new File("Textures/background.png"));
+			bloodAnim = ImageIO.read(new File("Textures/bloodAnim.png"));
+			menuBack = ImageIO.read(new File("Textures/bg.jpg"));
+			selection = ImageIO.read(new File("Textures/gradient.png"));
+			bossTexture = ImageIO.read(new File("Textures/REDBOSS.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -571,7 +571,7 @@ public class Main extends JFrame{
 			}
 		}
 		try {
-			sheet = ImageIO.read(new File("spritesheet.png"));
+			sheet = ImageIO.read(new File("Textures/spritesheet.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -583,7 +583,7 @@ public class Main extends JFrame{
 			enemyTexture[i]= sheet.getSubimage(i * 195,  0, 195,189 );
 		}
 		try {
-			sheet = ImageIO.read(new File("enemy2.png"));
+			sheet = ImageIO.read(new File("Textures/enemy2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

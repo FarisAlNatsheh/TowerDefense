@@ -20,7 +20,7 @@ public class Boss extends Enemy{
 	public void draw(Graphics g) {
 		if(!playing) {
 			Main.clip.stop();
-			Main.music("boss song.wav");
+			Main.music("Sound/boss song.wav");
 			playing = true;
 		}
 		double angle = 0;

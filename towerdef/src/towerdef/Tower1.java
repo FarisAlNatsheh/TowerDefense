@@ -15,7 +15,7 @@ public class Tower1 extends Tower {
 	static BufferedImage texture;
 	public static void initializeTexture() {
 		try {
-			texture = ImageIO.read(new File("cannon2.png"));
+			texture = ImageIO.read(new File("Textures/cannon2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -15,7 +15,7 @@ public class TextBuilder {
 	public TextBuilder() {
 		BufferedImage sheet = null;
 		try {
-			sheet = ImageIO.read(new File("font2.png"));
+			sheet = ImageIO.read(new File("Textures/font2.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

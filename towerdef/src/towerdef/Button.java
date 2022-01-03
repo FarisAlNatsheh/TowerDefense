@@ -20,7 +20,7 @@ public class Button extends Component{
 	}
 	public void initializeTexture() {
 		try {
-			texture = ImageIO.read(new File("button.png"));
+			texture = ImageIO.read(new File("Textures/button.png"));
 	
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -33,7 +33,7 @@ public class Button extends Component{
 	}
 	public void hold() {
 			try {
-			texture = ImageIO.read(new File("buttonP.png"));
+			texture = ImageIO.read(new File("Textures/buttonP.png"));
 	
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class Button extends Component{
 	}
 	public void release() {
 			try {
-			texture = ImageIO.read(new File("button.png"));
+			texture = ImageIO.read(new File("Textures/button.png"));
 	
 		} catch (IOException e) {
 			e.printStackTrace();

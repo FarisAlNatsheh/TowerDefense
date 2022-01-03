@@ -80,7 +80,7 @@ public class Menu {
 				switch(i) {
 				case 0:
 					Main.clip.stop();
-					Main.music("Songgame.wav");
+					Main.music("Sound/Songgame.wav");
 					Main.menuSwitch = 1; 
 					return;
 				case 1:Main.menuSwitch =  4;break;
@@ -158,19 +158,19 @@ public class Menu {
 						
 						if(!Main.game) {
 							Main.clip.stop();
-							Main.music("Menu.wav");
+							Main.music("Sound/Menu.wav");
 							Main.menuSwitch = 3;
 						}
 						else{
 							Main.clip.stop();
 						
 							if(Main.playerHealth > 50)
-								Main.music("Songgame.wav");
+								Main.music("Sound/Songgame.wav");
 							else
-								Main.music("intense.wav");
+								Main.music("Sound/intense.wav");
 							if(Boss.playing) {
 								Main.clip.stop();
-								Main.music("boss song.wav");
+								Main.music("Sound/boss song.wav");
 							}
 							Main.menuSwitch = 1;
 						}
@@ -179,7 +179,7 @@ public class Menu {
 						if(Main.game) {
 							Main.resetGame();
 							Main.clip.stop();
-							Main.music("Menu.wav");
+							Main.music("Sound/Menu.wav");
 							Main.game = false;
 							Main.menuSwitch = 3;
 						}

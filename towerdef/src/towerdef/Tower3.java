@@ -14,7 +14,7 @@ public class Tower3 extends Tower {
 	}
 	public static void initializeTexture() {
 		try {
-			texture = ImageIO.read(new File("Tide Fighter.png"));
+			texture = ImageIO.read(new File("Textures/Tide Fighter.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
