@@ -8,16 +8,15 @@ import javax.imageio.ImageIO;
 
 public class Tower2 extends Tower {
 	static double defaultRange = 4;
+	static BufferedImage texture;
 	public Tower2(int x, int y) {
-		super(x, y, 75, 350, defaultRange, 80,1, initializeTexture(),2);
+		super(x, y, 75, 350, defaultRange, 80,1, texture,2);
 	}
-	public static BufferedImage initializeTexture() {
-		BufferedImage texture = null;
+	public static void initializeTexture() {
 		try {
 			texture = ImageIO.read(new File("Titan.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return texture;
 	}
 }

@@ -75,7 +75,7 @@ public class Main extends JFrame{
 
 
 	long startTime;
-	int delay , targetTPS = 70;
+	int delay , targetTPS = 60;
 	static boolean toggleFullscreen = false;
 	//delay before each frame (how often should the program tick)
 
@@ -179,8 +179,9 @@ public class Main extends JFrame{
 				}
 				else if(menuSwitch == 2) 
 					menu.deathClick(mouseXi, mouseYi);
-				else if(menuSwitch == 3)
+				else if(menuSwitch == 3) {
 					menu.menuAnimate(mouseXi, mouseYi);
+				}
 				else if(menuSwitch == 4)
 					menu.settingsAnimate(mouseXi, mouseYi);
 			}
@@ -232,12 +233,12 @@ public class Main extends JFrame{
 		stats = new StatWindow(13,7);
 		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
-			public void paint(Graphics g) {
+			public void paintComponent(Graphics g) {
 				draw(g);
 				repaint();
-			}
+			} 
 		};
-	
+		game.setDoubleBuffered(true);
 		add(game);
 		
 		setVisible(true);
@@ -287,8 +288,7 @@ public class Main extends JFrame{
 	public void game() {
 		//Run each tick
 		game = true;
-		winWidth = getWidth()-tileWidth*4;
-		winHeight = getHeight();
+		
 		if(tick%10 == 0) {
 			reAdjust();
 		}
@@ -536,6 +536,9 @@ public class Main extends JFrame{
 	}
 
 	public void initializeTextures() {
+		Tower1.initializeTexture();
+		Tower2.initializeTexture();
+		Tower3.initializeTexture();
 		BufferedImage sheet = null;
 		try {
 			sheet = ImageIO.read(new File("texturess.png"));
@@ -545,7 +548,7 @@ public class Main extends JFrame{
 			bloodAnim = ImageIO.read(new File("bloodAnim.png"));
 			menuBack = ImageIO.read(new File("bg.jpg"));
 			selection = ImageIO.read(new File("gradient.png"));
-			bossTexture = ImageIO.read(new File("REDBOSS.png"));;
+			bossTexture = ImageIO.read(new File("REDBOSS.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -591,21 +594,21 @@ public class Main extends JFrame{
 
 	public void drawSelection(Graphics g) {
 		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
-		g.drawImage(Tower1.initializeTexture(), winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
-		g.drawImage(Tower2.initializeTexture(), winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
-		g.drawImage(Tower3.initializeTexture(), winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
+		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
+		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
+		g.drawImage(Tower3.texture, winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
 		if(towerSelection == 1) {
-			g.drawImage(Tower1.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
+			g.drawImage(Tower1.texture, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
 			g.fillOval((int)((mouseX/tileWidth-Tower1.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower1.defaultRange)*Main.tileHeight), (int) ((Tower1.defaultRange*2+1)*Main.tileWidth), (int)((Tower1.defaultRange*2+1)*Main.tileHeight));
 		}
 		else if(towerSelection == 2) {
-			g.drawImage(Tower2.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
+			g.drawImage(Tower2.texture, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
 			g.fillOval((int)((mouseX/tileWidth-Tower2.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower2.defaultRange)*Main.tileHeight), (int) ((Tower2.defaultRange*2+1)*Main.tileWidth), (int)((Tower2.defaultRange*2+1)*Main.tileHeight));
 		}
 		else if(towerSelection == 3) {
-			g.drawImage(Tower3.initializeTexture(), mouseX, mouseY,tileWidth, tileHeight,null );
+			g.drawImage(Tower3.texture, mouseX, mouseY,tileWidth, tileHeight,null );
 			g.setColor(new Color(255,255,255,50));
 			g.fillOval((int)((mouseX/tileWidth-Tower3.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower3.defaultRange)*Main.tileHeight), (int) ((Tower3.defaultRange*2+1)*Main.tileWidth), (int)((Tower3.defaultRange*2+1)*Main.tileHeight));
 		}
@@ -631,6 +634,10 @@ public class Main extends JFrame{
 
 
 	public void reAdjust(){
+		if(menuSwitch == 1) {
+			winWidth = getWidth()-tileWidth*4;
+			winHeight = getHeight();
+		}
 		tileHeight = winHeight/gridHeight;
 		tileWidth = winWidth/gridWidth;
 		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
