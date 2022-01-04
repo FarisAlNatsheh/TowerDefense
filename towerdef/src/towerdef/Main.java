@@ -201,7 +201,7 @@ public class Main extends JFrame{
 				repaint();
 			} 
 		};
-		game.setDoubleBuffered(false);
+		game.setDoubleBuffered(true);
 		add(game);
 		
 		setVisible(true);
