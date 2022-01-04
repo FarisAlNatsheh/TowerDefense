@@ -26,7 +26,7 @@ import javax.swing.*;
 //ADD BACKGROUND FOR TURRET SELECTION
 //ADD MORE TURRETS
 //FIX RANGE
-//
+////
 @SuppressWarnings("serial")
 public class Main extends JFrame{
 	int reAdjust = 0;
