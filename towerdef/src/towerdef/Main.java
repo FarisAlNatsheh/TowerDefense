@@ -187,7 +187,7 @@ public class Main extends JFrame{
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
-				//try {Thread.sleep(10);}catch(Exception e) {};
+				try {Thread.sleep(10);}catch(Exception e) {};
 				
 				draw(g);
 				frames++;
@@ -285,7 +285,7 @@ public class Main extends JFrame{
 
 	}
 
-	public void drawEnts(Graphics g) {
+	public synchronized void drawEnts(Graphics g) {
 		for(Entity k: bloodSpots) {
 			k.draw(g);
 		}
@@ -358,7 +358,7 @@ public class Main extends JFrame{
 		WaveHandler.prevEnemies = 1;
 	}
 
-	public void game() {
+	public synchronized void game() {
 		//Run each tick
 		game = true;
 		//reAdjust();

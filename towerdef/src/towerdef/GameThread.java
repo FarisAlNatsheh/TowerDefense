@@ -7,7 +7,6 @@ public class GameThread extends Thread{
 	int tps;
 	public void run() {
 		while(true) {
-			
 			if(System.nanoTime()-startTime >= 1000000000/Main.targetTPS) {
 				Main.tick++;
 				tps++;
