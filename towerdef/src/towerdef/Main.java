@@ -187,7 +187,7 @@ public class Main extends JFrame{
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
-				try {Thread.sleep(10);}catch(Exception e) {};
+				//try {Thread.sleep(10);}catch(Exception e) {};
 				
 				draw(g);
 				frames++;
