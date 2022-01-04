@@ -404,8 +404,10 @@ public class Main extends JFrame{
 		//Spawn enemies based on round pattern
 
 		if(enemies.size() > 0 && towers.size()>0)
-			for(Tower k : towers)
+			for(int i = 0; i < towers.size(); i++) {
+				Tower k = towers.get(i);
 				k.fire();
+			}
 		//Fire towers
 
 		if(tick % 1000 == 0) {
