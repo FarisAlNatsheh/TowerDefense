@@ -11,7 +11,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -610,6 +609,7 @@ public class Main extends JFrame{
 
 	}
 
+	@SuppressWarnings("static-access")
 	public static void music(String songName) {
 
 		try {
