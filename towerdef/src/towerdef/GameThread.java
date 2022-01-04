@@ -1,19 +1,25 @@
 package towerdef;
 
 public class GameThread extends Thread{
-	double startTime = System.currentTimeMillis();
+	double startTime = System.nanoTime();
+	double startTime2 = System.nanoTime();
 	Main game = new Main();
 	int tps;
 	public void run() {
 		while(true) {
 			
-			if(System.currentTimeMillis()-startTime >= 1000/60) {
+			if(System.nanoTime()-startTime >= 1000000000/Main.targetTPS) {
 				Main.tick++;
 				tps++;
-				startTime = System.currentTimeMillis();
-				game.game();
+				startTime = System.nanoTime();
+				if(Main.start)
+					game.game();
 			}
-			
+			if(System.nanoTime()-startTime2 >= 1000000000) {
+				System.out.println("TPS :"+tps);
+				tps = 0;
+				startTime2 = System.nanoTime();
+			}
 			
 		}
 	}

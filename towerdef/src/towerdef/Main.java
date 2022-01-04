@@ -29,7 +29,7 @@ import javax.swing.*;
 ////
 @SuppressWarnings("serial")
 public class Main extends JFrame{
-	int reAdjust = 0;
+	static int reAdjust = 0;
 	
 	static int mouseX;
 	static int mouseY;
@@ -76,7 +76,7 @@ public class Main extends JFrame{
 	//To save the locations of already placed towers ( checked to avoid adding multiple towers in the same spot)
 
 
-	static long startTime;
+	static long startTime, startTime2 = System.nanoTime();
 	static int delay;
 
 	static int targetTPS = 70;
@@ -98,7 +98,8 @@ public class Main extends JFrame{
 	static StatWindow stats;
 	Button pause;
 	int mouseXi, mouseYi;
-
+	static double frames;
+	static int FPS;
 	public Main() {
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
@@ -181,11 +182,23 @@ public class Main extends JFrame{
 		JPanel game;
 		stats = new StatWindow(13,7);
 		//enemies.add(new Boss(3,0,3));
+	
 		game = new JPanel() {
 			public void paintComponent(Graphics g) {
-				draw(g);
-				repaint();
+				frames = 0;
+				startTime = System.nanoTime();
+				//try {Thread.sleep(10);}catch(Exception e) {};
 				
+				draw(g);
+				frames++;
+				//TPS counter
+				g.setColor(Color.white);
+				if(System.nanoTime()-startTime2 >= 500000000) {
+					FPS = (int) (frames/(System.nanoTime()-startTime)*1000000000);
+					startTime2 = System.nanoTime();
+				}
+				g.drawString(FPS+ " FPS", winWidth-140, 10);
+				repaint();
 			} 
 		};
 		game.setDoubleBuffered(false);
@@ -240,9 +253,7 @@ public class Main extends JFrame{
 		}
 
 		
-		//TPS counter
-		g.setColor(Color.white);
-		g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
+		
 
 
 
@@ -281,8 +292,10 @@ public class Main extends JFrame{
 		for(Entity k : towers) {
 			k.draw(g);
 		}
-		for(Entity k : enemies) {
-			k.draw(g);
+		for(int i =0; i < enemies.size();i++) {
+			Enemy k = enemies.get(i);
+			if(k != null)
+				k.draw(g);
 		}
 
 		if(selectedTower != 0)
@@ -322,10 +335,10 @@ public class Main extends JFrame{
 				y-barLength > pause.y &&
 				y-barLength <= pause.y+pause.size+tileWidth/2) {
 			menuSwitch = 4;
-
 			winWidth = getWidth();
 			winHeight = getHeight();
 			reAdjust();
+			Main.start = false;
 		}	
 	}
 
@@ -348,9 +361,9 @@ public class Main extends JFrame{
 	public void game() {
 		//Run each tick
 		game = true;
-		
+		//reAdjust();
 		if(tick%10 == 0) {
-			if(reAdjust < 8) {
+			if(reAdjust < 10) {
 				reAdjust();
 				reAdjust++;
 			}

@@ -48,41 +48,41 @@ public abstract class Tower extends Entity{
 					}
 
 		return null;
-		
+
 	}
 	//Checks for target in a square around the tower
-	
+
 	public Enemy checkTargetOval() {
 		for(Enemy k: Main.enemies) {
 			if(Math.abs(k.X*Main.tileWidth+Main.tileWidth/2+k.animX-x)/Main.tileWidth <= range && 
-			   Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y)/Main.tileHeight <= range)
+					Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y)/Main.tileHeight <= range)
 				return k;
 			//System.out.println(Math.abs( k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-(y+Main.tileHeight/2) )/Main.tileHeight);
 		}
 		return null;
 	}
 	//Checks for target in a circle around the tower
-	
+
 	public void drawAim(Graphics g) {
 		g.setColor(Color.BLACK);
 		for(Enemy k: Main.enemies) {
 			if(Math.abs(k.X*Main.tileWidth+Main.tileWidth/2+k.animX-x) <= range*Main.tileWidth && 
-			   Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y) <= range*Main.tileHeight	)
+					Math.abs(k.Y*Main.tileHeight+Main.tileHeight/2+k.animY-y) <= range*Main.tileHeight	)
 				g.drawLine(x, y, k.X*Main.tileWidth+Main.tileWidth/2+(int)k.animX, k.Y*Main.tileHeight+Main.tileHeight/2+(int)k.animY);
 		}
 	}
 	//Draws lines between enemies of tower and the tower itself
-	
+
 	public void fire() {
 		Enemy target = checkTargetOval();
 		//Range option
-		
+
 		if(target != null) {
 			initialXdif = (target.X)*Main.tileWidth+target.animX+Main.tileWidth/2 - x;
 			initialYdif = (target.Y)*Main.tileHeight+target.animY+Main.tileHeight/2 - y;
 			angle = Math.atan((double)initialYdif/initialXdif);
 			//Calculate angle
-			
+
 			if(Main.tick % speed == 0) {
 				projectiles.add(new Projectile(x,y, target, pierce,projType, damage,true,false));
 			}
@@ -90,7 +90,7 @@ public abstract class Tower extends Entity{
 		}
 	}
 	//Create projectile with conditions
-	
+
 	public void drawRange(Graphics2D g, boolean oval) {
 		if(!oval) {
 			for(int i = mapY-(int)range; i <= mapY+range; i++) {
@@ -108,17 +108,21 @@ public abstract class Tower extends Entity{
 
 	}
 	//Draw the range around the tower (used when building towers)
-	
+
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		//drawRange(g2, true);
 		//drawAim(g);
 		////To be implemented
-		for(Projectile k : projectiles) {
-			k.draw(g);
+
+		for(int i = 0; i < projectiles.size();i++) {
+			Projectile k = projectiles.get(i);
+			if(k != null)
+				k.draw(g);
+
 		}
 		//Draw projectiles of this tower
-		
+
 		if(initialYdif > 0) {
 			if(angle < 0) {
 				g2.rotate(angle, x,y);

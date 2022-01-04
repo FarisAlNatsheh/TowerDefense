@@ -81,7 +81,8 @@ public class Menu {
 				case 0:
 					Main.clip.stop();
 					Main.music("Sound/Songgame.wav");
-					Main.menuSwitch = 1; 
+					Main.menuSwitch = 1;
+					Main.start = true;
 					return;
 				case 1:Main.menuSwitch =  4;break;
 				case 2:
@@ -173,6 +174,9 @@ public class Menu {
 								Main.music("Sound/boss song.wav");
 							}
 							Main.menuSwitch = 1;
+							Main.start = true;
+							Main.reAdjust = 0;
+							
 						}
 						break;
 					case 6:
@@ -189,6 +193,7 @@ public class Menu {
 					if(i == 3) {
 						Main.resetGame();
 						Main.menuSwitch = 1;
+						Main.start = true;
 						return;
 					}
 				}
