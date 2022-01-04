@@ -363,7 +363,7 @@ public class Main extends JFrame{
 		game = true;
 		//reAdjust();
 		if(tick%10 == 0) {
-			if(reAdjust < 10) {
+			if(reAdjust < 5) {
 				reAdjust();
 				reAdjust++;
 			}
