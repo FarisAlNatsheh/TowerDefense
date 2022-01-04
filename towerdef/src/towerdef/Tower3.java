@@ -30,8 +30,8 @@ public class Tower3 extends Tower {
 			//Calculate angle
 			
 			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x-Main.tileWidth/4,y+Main.tileHeight/4, target, pierce,projType, damage));
-				projectiles.add(new Projectile(x+Main.tileWidth/4,y+Main.tileHeight/4, target, pierce,projType, damage)); 
+				projectiles.add(new Projectile(x,y+Main.tileHeight/8, target, pierce,projType, damage, true,true));
+				projectiles.add(new Projectile(x,y+Main.tileHeight/8, target, pierce,projType, damage, false, true)); 
 			}
 			//Create new projectile at the towers location
 		}

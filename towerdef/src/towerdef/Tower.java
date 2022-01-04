@@ -25,6 +25,7 @@ public abstract class Tower extends Entity{
 	int projType;
 	int damage;
 	BufferedImage texture;
+	int projX, projY, projAngle;
 	public Tower(int x, int y, int pierce, int price, double range,int speed, int projType, BufferedImage texture, int damage) {
 		this.x = x*Main.tileWidth+Main.tileWidth/2;
 		this.y = y*Main.tileHeight+Main.tileHeight/2;
@@ -83,7 +84,7 @@ public abstract class Tower extends Entity{
 			//Calculate angle
 			
 			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x,y, target, pierce,projType, damage));
+				projectiles.add(new Projectile(x,y, target, pierce,projType, damage,true,false));
 			}
 			//Create new projectile at the towers location
 		}

@@ -29,7 +29,8 @@ import javax.swing.*;
 //FIX RANGE
 @SuppressWarnings("serial")
 public class Main extends JFrame{
-
+	int reAdjust = 0;
+	
 	static int mouseX;
 	static int mouseY;
 	//Mouse location on screen
@@ -76,7 +77,7 @@ public class Main extends JFrame{
 
 
 	long startTime;
-	int delay , targetTPS = 60;
+	int delay , targetTPS = 70;
 	static boolean toggleFullscreen = false;
 	//delay before each frame (how often should the program tick)
 
@@ -162,7 +163,7 @@ public class Main extends JFrame{
 				//System.out.println("Resized to " + e.getComponent().getSize());
 				winWidth = getWidth();
 				winHeight = getHeight();
-
+				reAdjust = 0;
 				reAdjust();
 				try {
 					stats.adjust();
@@ -285,12 +286,16 @@ public class Main extends JFrame{
 		WaveHandler.enemies = 1;
 		WaveHandler.prevEnemies = 1;
 	}
+
 	public void game() {
 		//Run each tick
 		game = true;
 		
 		if(tick%10 == 0) {
-			reAdjust();
+			if(reAdjust < 3) {
+				reAdjust();
+				reAdjust++;
+			}
 		}
 		checkCollisions();
 		if(playerHealth <= 50) {

@@ -34,9 +34,9 @@ public class WaveHandler {
 			if(bossAdded) {
 				Main.clip.stop();
 				if(Main.playerHealth > 50)
-					Main.music("Songgame.wav");
+					Main.music("Sound/Songgame.wav");
 				else
-					Main.music("intense.wav");
+					Main.music("Sound/intense.wav");
 				bossAdded = false;
 			}
 			if(delay > 5)

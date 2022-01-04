@@ -30,7 +30,10 @@ public class Projectile extends Entity{
 	AudioFormat format;
 	DataLine.Info info;
 	Clip clip;
-	public Projectile(double x, double y, Enemy target, int pierce, int type, int damage) {
+	boolean left, doubleShot;
+	public Projectile(double x, double y, Enemy target, int pierce, int type, int damage, boolean left, boolean doubleShot) {
+		this.doubleShot = doubleShot;
+		this.left = left;
 		this.x = x;
 		this.y = y;
 		this.target = target;
@@ -45,12 +48,12 @@ public class Projectile extends Entity{
 		if(type == 0) {
 			speedX = Main.tileWidth/2;
 			speedY= Main.tileHeight/2;
-			play(new File("Sound/laser4.wav")); //credit dklon
+			play(new File("Sound/laser4.wav")); 
 		}
 		else if(type == 1) {
 			speedX = Main.tileWidth/16;
 			speedY= Main.tileHeight/16;
-			play(new File("Sound/tir.wav")); //credit dklon
+			play(new File("Sound/tir.wav")); 
 		}
 		else if(type == 2) {
 			speedX = Main.tileWidth;
@@ -109,12 +112,27 @@ public class Projectile extends Entity{
 		//Move based on angle
 	}
 	public void draw(Graphics g) {
+		if(doubleShot) {
+			if(left) {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.rotate(angle , x+Main.tileWidth/4,y- height/2);
+				g2.drawImage(Main.projectileImg,(int)x+Main.tileWidth/4-width/2, (int)y- height/2, width, height,null);
+				g2.rotate(angle * -1, x+Main.tileWidth/4,y- height/2);
+			}
+			else {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.rotate(angle , x-Main.tileWidth/4,y- height/2);
+				g2.drawImage(Main.projectileImg,(int)x-Main.tileWidth/4-width/2, (int)y- height/2, width, height,null);
+				g2.rotate(angle * -1, x-Main.tileWidth/4,y- height/2);
+			}
+			return;
+		}
 		Graphics2D g2 = (Graphics2D) g;
 		g2.rotate(angle , x,y- height/2);
 		g2.drawImage(Main.projectileImg,(int)x-width/2, (int)y- height/2, width, height,null);
 		g2.rotate(angle * -1, x,y- height/2);
 
-		
+
 	}
 	//Draw projectile based on rotation
 }
