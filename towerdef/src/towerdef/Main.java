@@ -77,8 +77,10 @@ public class Main extends JFrame{
 	//To save the locations of already placed towers ( checked to avoid adding multiple towers in the same spot)
 
 
-	long startTime;
-	int delay , targetTPS = 70;
+	static long startTime;
+	static int delay;
+
+	static int targetTPS = 70;
 	static boolean toggleFullscreen = false;
 	//delay before each frame (how often should the program tick)
 
@@ -182,19 +184,13 @@ public class Main extends JFrame{
 		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
 			public void paintComponent(Graphics g) {
-				startTime = System.currentTimeMillis();
-				try {Thread.sleep(delay);} 
-				catch (InterruptedException e) {}
+				
+
 				//tick++;
-				tps++;
+				
 				draw(g);
 				repaint();
-				if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
-					delay++;
-				else if(tps/((System.currentTimeMillis()-startTime)/1000.0) < targetTPS- 10)
-					if(delay != 0)
-						delay--;
-				tps = 0;
+			
 			} 
 		};
 		game.setDoubleBuffered(false);
