@@ -41,8 +41,8 @@ public class Enemy extends Entity{
 	public void readjust() {
 		switch(type) {
 		case 1:
-			speedX= Main.tileWidth/3000.0;
-			speedY = Main.tileHeight/3000.0;
+			speedX= Main.tileWidth/30.0;
+			speedY = Main.tileHeight/30.0;
 			break;
 		case 2:
 			speedX= Main.tileWidth/20.0;

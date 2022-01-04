@@ -95,7 +95,7 @@ public class Main extends JFrame{
 	static int towerSelection = 0;
 	static int barLength = 31;
 	boolean fullscreen;
-	static boolean game, adjust;
+	static boolean game, adjust,start;
 	static StatWindow stats;
 	Button pause;
 	int mouseXi, mouseYi;
@@ -184,13 +184,9 @@ public class Main extends JFrame{
 		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
 			public void paintComponent(Graphics g) {
-				
-
-				//tick++;
-				
 				draw(g);
 				repaint();
-			
+				
 			} 
 		};
 		game.setDoubleBuffered(false);
@@ -202,11 +198,8 @@ public class Main extends JFrame{
 	public void draw(Graphics g) {
 
 		//Game loop
-	
-		
 		switch(menuSwitch) {
 		case 1:
-			game();
 			g.setColor(Color.black);
 			g.fillRect(0,0,winWidth,winHeight);
 			drawGrid(g);
@@ -358,7 +351,7 @@ public class Main extends JFrame{
 		game = true;
 		
 		if(tick%10 == 0) {
-			if(reAdjust < 3) {
+			if(reAdjust < 8) {
 				reAdjust();
 				reAdjust++;
 			}
