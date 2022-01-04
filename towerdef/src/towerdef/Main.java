@@ -96,63 +96,8 @@ public class Main extends JFrame{
 	static boolean game, adjust;
 	static StatWindow stats;
 	Button pause;
-
-	public static void placeTower(int x, int y) {
-		int mouseX=x/tileWidth;
-		int mouseY= (y-barLength)/tileHeight;
-		if(x > winWidth && y-barLength < tileHeight*2) {
-			towerSelection = 1;
-		}
-		if(x > winWidth && y-barLength > tileHeight*2  && y-barLength < tileHeight*5) {
-			towerSelection = 2;
-		}
-		if(x > winWidth && y-barLength > tileHeight*6  && y-barLength < tileHeight*8) {
-			towerSelection = 3;
-		}
-		for(Dimension k : placedTowers) {
-			if(k.width == mouseX && k.height == mouseY)
-				return;
-		}
-		try {
-			if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2  && towerSelection != 0) {
-				Tower tower = null;
-				if(towerSelection == 1)
-					tower = new Tower1(mouseX, mouseY);
-				if(towerSelection == 2)
-					tower = new Tower2(mouseX, mouseY);
-				if(towerSelection == 3)
-					tower = new Tower3(mouseX, mouseY);
-				if(tower.price <= playerMoney) {
-					towers.add(tower);
-					placedTowers.add(new Dimension(mouseX, mouseY));
-					towerSelection = 0;
-					playerMoney-=tower.price;
-				}
-			}
-			else
-				towerSelection = 0;
-		}
-		catch(Exception e1) {};
-	}
-
-	public void setFullscreen() {
-		if(!fullscreen) {
-			dispose();
-			setUndecorated(true);
-			setVisible(true);
-			setExtendedState(JFrame.MAXIMIZED_BOTH );
-			fullscreen = true;
-			barLength = 0;
-		}
-		else {
-			dispose();
-			setUndecorated(false);
-			setVisible(true);
-			fullscreen = false;
-			barLength = 31;
-		}
-	}
 	int mouseXi, mouseYi;
+
 	public Main() {
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
@@ -237,27 +182,152 @@ public class Main extends JFrame{
 		//enemies.add(new Boss(3,0,3));
 		game = new JPanel() {
 			public void paintComponent(Graphics g) {
+				startTime = System.currentTimeMillis();
+				try {Thread.sleep(delay);} 
+				catch (InterruptedException e) {}
+				//tick++;
+				tps++;
 				draw(g);
 				repaint();
+				if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
+					delay++;
+				else if(tps/((System.currentTimeMillis()-startTime)/1000.0) < targetTPS- 10)
+					if(delay != 0)
+						delay--;
+				tps = 0;
 			} 
 		};
-		game.setDoubleBuffered(true);
+		game.setDoubleBuffered(false);
 		add(game);
 		
 		setVisible(true);
 	}
-	public void buffer() {
-		BufferStrategy bs = getBufferStrategy();
-		if(bs == null) {
-			createBufferStrategy(3);
-			return;
+
+	public void draw(Graphics g) {
+
+		//Game loop
+	
+		
+		switch(menuSwitch) {
+		case 1:
+			game();
+			g.setColor(Color.black);
+			g.fillRect(0,0,winWidth,winHeight);
+			drawGrid(g);
+			drawEnts(g);
+			drawSelection(g);
+			pause.draw(g);
+			//Drawing entities and blocks
+			
+			builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
+			builder.drawString(g, new StringBuilder("Money:").append((int)playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
+			builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
+
+			//Draw text
+			if(stats.visible)
+				stats.draw(g);
+			break;
+		case 2:
+			winWidth = getWidth()-tileWidth*4;
+			winHeight = getHeight();
+			menu.death(g);
+			break;
+		case 3:
+			menu.mainMenu(g);
+			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
+			break;
+		case 4:
+			menu.settings(g);
+			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
+			break;
 		}
 		
-		Graphics g = bs.getDrawGraphics();
-		draw(g);
-		g.dispose();
-		bs.show();
+
+
+
+		if(song) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(new Color(255,0,0,30));
+			g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
+		}
+
+		
+		//TPS counter
+		g.setColor(Color.white);
+		g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
+
+
+
+	} 
+	
+	public void drawGrid(Graphics g) {
+
+		g.fillRect(0, 0, getWidth(), getHeight());
+		g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
+
+		//Draw blocks based on values in the array
+		//Ignores empty blocks for performance
+
+		for(int i = 0; i < gridHeight; i++) {
+			for(int j = 0; j < gridWidth; j++) {
+				if(map[j][i] == 0) {
+					//g.drawImage(textures[18][6],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+				else if(map[j][i] == 1){
+					g.drawImage(textures[4][3],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+				else if(map[j][i] == 2){
+					g.drawImage(textures[0][0],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
+				}
+			}
+		}
+
+
+
 	}
+
+	public void drawEnts(Graphics g) {
+		for(Entity k: bloodSpots) {
+			k.draw(g);
+		}
+		for(Entity k : towers) {
+			k.draw(g);
+		}
+		for(Entity k : enemies) {
+			k.draw(g);
+		}
+
+		if(selectedTower != 0)
+			towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
+		//Draw all entities
+
+	}
+	
+	public void drawSelection(Graphics g) {
+		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
+		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "100" , winWidth+tileWidth,tileHeight*2 , tileHeight/2);
+		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "350" , winWidth+tileWidth,tileHeight*5 , tileHeight/2);
+		g.drawImage(Tower3.texture, winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
+		builder.drawString(g, "50" , winWidth+tileWidth,tileHeight*8 , tileHeight/2);
+		if(towerSelection == 1) {
+			g.drawImage(Tower1.texture, mouseX, mouseY,tileWidth, tileHeight,null );
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mouseX/tileWidth-Tower1.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower1.defaultRange)*Main.tileHeight), (int) ((Tower1.defaultRange*2+1)*Main.tileWidth), (int)((Tower1.defaultRange*2+1)*Main.tileHeight));
+		}
+		else if(towerSelection == 2) {
+			g.drawImage(Tower2.texture, mouseX, mouseY,tileWidth, tileHeight,null );
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mouseX/tileWidth-Tower2.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower2.defaultRange)*Main.tileHeight), (int) ((Tower2.defaultRange*2+1)*Main.tileWidth), (int)((Tower2.defaultRange*2+1)*Main.tileHeight));
+		}
+		else if(towerSelection == 3) {
+			g.drawImage(Tower3.texture, mouseX, mouseY,tileWidth, tileHeight,null );
+			g.setColor(new Color(255,255,255,50));
+			g.fillOval((int)((mouseX/tileWidth-Tower3.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower3.defaultRange)*Main.tileHeight), (int) ((Tower3.defaultRange*2+1)*Main.tileWidth), (int)((Tower3.defaultRange*2+1)*Main.tileHeight));
+		}
+	}
+
 	public void pauseGame(int x, int y) {
 		if(x > pause.x &&
 				x <= pause.x + pause.size*(pause.s.length()+2) &&
@@ -270,7 +340,6 @@ public class Main extends JFrame{
 			reAdjust();
 		}	
 	}
-
 
 	public static void resetGame() {
 		song = false;
@@ -347,75 +416,64 @@ public class Main extends JFrame{
 		}
 		//Clear blood spots every interval
 	}
-	public void draw(Graphics g) {
 
-		//Game loop
-		startTime = System.currentTimeMillis();
-		try {Thread.sleep(delay);} 
-		catch (InterruptedException e) {}
-
-		
-		tick++;
-		tps++;
-
-		switch(menuSwitch) {
-		case 1:
-			game();
-			g.setColor(Color.black);
-			g.fillRect(0,0,winWidth,winHeight);
-			drawGrid(g);
-			drawEnts(g);
-			checkCollisions();
-			drawSelection(g);
-			pause.draw(g);
-			//Drawing entities and blocks
-			
-			builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
-			builder.drawString(g, new StringBuilder("Money:").append((int)playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
-			builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
-
-			//Draw text
-			if(stats.visible)
-				stats.draw(g);
-			break;
-		case 2:
-			winWidth = getWidth()-tileWidth*4;
-			winHeight = getHeight();
-			reAdjust();
-			menu.death(g);
-			break;
-		case 3:
-			menu.mainMenu(g);
-			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
-			break;
-		case 4:
-			menu.settings(g);
-			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
-			break;
+	public static void placeTower(int x, int y) {
+		int mouseX=x/tileWidth;
+		int mouseY= (y-barLength)/tileHeight;
+		if(x > winWidth && y-barLength < tileHeight*2) {
+			towerSelection = 1;
 		}
-		
-
-
-
-		if(song) {
-			Graphics2D g2 = (Graphics2D)g;
-			g2.setColor(new Color(255,0,0,30));
-			g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
+		if(x > winWidth && y-barLength > tileHeight*2  && y-barLength < tileHeight*5) {
+			towerSelection = 2;
 		}
+		if(x > winWidth && y-barLength > tileHeight*6  && y-barLength < tileHeight*8) {
+			towerSelection = 3;
+		}
+		for(Dimension k : placedTowers) {
+			if(k.width == mouseX && k.height == mouseY)
+				return;
+		}
+		try {
+			if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2  && towerSelection != 0) {
+				Tower tower = null;
+				if(towerSelection == 1)
+					tower = new Tower1(mouseX, mouseY);
+				if(towerSelection == 2)
+					tower = new Tower2(mouseX, mouseY);
+				if(towerSelection == 3)
+					tower = new Tower3(mouseX, mouseY);
+				if(tower.price <= playerMoney) {
+					towers.add(tower);
+					placedTowers.add(new Dimension(mouseX, mouseY));
+					towerSelection = 0;
+					playerMoney-=tower.price;
+				}
+			}
+			else
+				towerSelection = 0;
+		}
+		catch(Exception e1) {};
+	}
 
-		
-		//TPS counter
-		g.setColor(Color.white);
-		g.drawString(Double.toString(tps/((System.currentTimeMillis()-startTime)/1000.0) ), winWidth-140, 10); ;
-		if(tps/((System.currentTimeMillis()-startTime)/1000.0) > targetTPS + 10)
-			delay++;
-		else if(tps/((System.currentTimeMillis()-startTime)/1000.0) < targetTPS- 10)
-			if(delay != 0)
-				delay--;
-		tps = 0;
-
-
-	} 
+	public void setFullscreen() {
+		if(!fullscreen) {
+			dispose();
+			setUndecorated(true);
+			setVisible(true);
+			setExtendedState(JFrame.MAXIMIZED_BOTH );
+			fullscreen = true;
+			barLength = 0;
+		}
+		else {
+			dispose();
+			setUndecorated(false);
+			setVisible(true);
+			fullscreen = false;
+			barLength = 31;
+		}
+	}
+	
+	@SuppressWarnings("static-access")
 	
 	public static int rand(int min, int max) {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
@@ -482,32 +540,6 @@ public class Main extends JFrame{
 		}
 	} 
 
-	public void drawGrid(Graphics g) {
-
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
-
-		//Draw blocks based on values in the array
-		//Ignores empty blocks for performance
-
-		for(int i = 0; i < gridHeight; i++) {
-			for(int j = 0; j < gridWidth; j++) {
-				if(map[j][i] == 0) {
-					//g.drawImage(textures[18][6],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-				else if(map[j][i] == 1){
-					g.drawImage(textures[4][3],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-				else if(map[j][i] == 2){
-					g.drawImage(textures[0][0],tileWidth*j, tileHeight*i, tileWidth, tileHeight, null);
-				}
-			}
-		}
-
-
-
-	}
-
 	public void initializeMap() {
 		for(int i = 0; i < 3; i++) {
 			map[3][i] = 1;
@@ -530,23 +562,6 @@ public class Main extends JFrame{
 		//map[3][0] = 0;
 		map[(gridWidth)/2+1][12] = 1;
 		map[(gridWidth)/2+1][11] = 2;
-	}
-
-	public void drawEnts(Graphics g) {
-		for(Entity k: bloodSpots) {
-			k.draw(g);
-		}
-		for(Entity k : towers) {
-			k.draw(g);
-		}
-		for(Entity k : enemies) {
-			k.draw(g);
-		}
-
-		if(selectedTower != 0)
-			towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
-		//Draw all entities
-
 	}
 
 	public void initializeTextures() {
@@ -606,32 +621,6 @@ public class Main extends JFrame{
 
 	}
 
-	public void drawSelection(Graphics g) {
-		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
-		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
-		builder.drawString(g, "100" , winWidth+tileWidth,tileHeight*2 , tileHeight/2);
-		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
-		builder.drawString(g, "350" , winWidth+tileWidth,tileHeight*5 , tileHeight/2);
-		g.drawImage(Tower3.texture, winWidth+tileWidth,tileHeight*6 ,tileWidth*2, tileHeight*2,null );
-		builder.drawString(g, "50" , winWidth+tileWidth,tileHeight*8 , tileHeight/2);
-		if(towerSelection == 1) {
-			g.drawImage(Tower1.texture, mouseX, mouseY,tileWidth, tileHeight,null );
-			g.setColor(new Color(255,255,255,50));
-			g.fillOval((int)((mouseX/tileWidth-Tower1.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower1.defaultRange)*Main.tileHeight), (int) ((Tower1.defaultRange*2+1)*Main.tileWidth), (int)((Tower1.defaultRange*2+1)*Main.tileHeight));
-		}
-		else if(towerSelection == 2) {
-			g.drawImage(Tower2.texture, mouseX, mouseY,tileWidth, tileHeight,null );
-			g.setColor(new Color(255,255,255,50));
-			g.fillOval((int)((mouseX/tileWidth-Tower2.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower2.defaultRange)*Main.tileHeight), (int) ((Tower2.defaultRange*2+1)*Main.tileWidth), (int)((Tower2.defaultRange*2+1)*Main.tileHeight));
-		}
-		else if(towerSelection == 3) {
-			g.drawImage(Tower3.texture, mouseX, mouseY,tileWidth, tileHeight,null );
-			g.setColor(new Color(255,255,255,50));
-			g.fillOval((int)((mouseX/tileWidth-Tower3.defaultRange)*tileWidth), (int)((mouseY/tileHeight-Tower3.defaultRange)*Main.tileHeight), (int) ((Tower3.defaultRange*2+1)*Main.tileWidth), (int)((Tower3.defaultRange*2+1)*Main.tileHeight));
-		}
-	}
-
-	@SuppressWarnings("static-access")
 	public static void music(String songName) {
 
 		try {
@@ -648,7 +637,6 @@ public class Main extends JFrame{
 			System.out.println(e.toString());
 		}
 	}
-
 
 	public void reAdjust(){
 		if(menuSwitch == 1) {
@@ -675,6 +663,5 @@ public class Main extends JFrame{
 		
 	}
 
-	public static void main(String args[]) {new Main();}
 
 }
