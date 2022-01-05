@@ -6,8 +6,11 @@ package towerdef;
 //credit dklon for laser sound 
 //Link To mobeyee.com laser
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -28,7 +31,7 @@ import javax.swing.*;
 //FIX RANGE
 ////
 @SuppressWarnings("serial")
-public class Main extends JFrame{
+public class Main extends JFrame implements KeyListener{
 	static int reAdjust = 0;
 	
 	static int mouseX;
@@ -80,9 +83,9 @@ public class Main extends JFrame{
 	static int delay;
 
 	static int targetTPS = 70;
-	static boolean toggleFullscreen = false;
+	static boolean toggleFullscreen = false, performance, dev;
 	//delay before each frame (how often should the program tick)
-
+	
 	Menu menu;
 	WaveHandler waveHandler;
 	static int menuSwitch = 3; //Menu switch
@@ -100,11 +103,13 @@ public class Main extends JFrame{
 	int mouseXi, mouseYi;
 	static double frames;
 	static int FPS;
+	Color bgColor= new Color(6,18,33);
 	public Main() {
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
 		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
 		music("Sound/Menu.wav");
+		this.addKeyListener(this);
 		//Re-adjusting variables depending on screen size
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
@@ -187,7 +192,7 @@ public class Main extends JFrame{
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
-				//try {Thread.sleep(10);}catch(Exception e) {};
+				//try {Thread.sleep(100);}catch(Exception e) {};
 				
 				draw(g);
 				frames++;
@@ -260,9 +265,10 @@ public class Main extends JFrame{
 	} 
 	
 	public void drawGrid(Graphics g) {
-
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
+		g.setColor(bgColor);
+		g.fillRect(0, 0, winWidth, winHeight);
+		if(!performance)
+			g.drawImage(bgImg,0,0 ,winWidth, winHeight,null);
 
 		//Draw blocks based on values in the array
 		//Ignores empty blocks for performance
@@ -281,7 +287,7 @@ public class Main extends JFrame{
 			}
 		}
 
-
+		g.setColor(Color.black);
 
 	}
 
@@ -305,7 +311,12 @@ public class Main extends JFrame{
 	}
 	
 	public void drawSelection(Graphics g) {
-		g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
+		g.setColor(Color.black);
+		g.fillRect(winWidth, 0, tileWidth*4,winHeight);
+		if(!performance)
+			g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
+			
+		
 		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
 		builder.drawString(g, "100" , winWidth+tileWidth,tileHeight*2 , tileHeight/2);
 		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
@@ -362,12 +373,11 @@ public class Main extends JFrame{
 		//Run each tick
 		game = true;
 		//reAdjust();
-		if(tick%10 == 0) {
 			if(reAdjust < 5) {
 				reAdjust();
 				reAdjust++;
 			}
-		}
+		
 		checkCollisions();
 		if(playerHealth <= 50) {
 			if(!song) {
@@ -664,6 +674,26 @@ public class Main extends JFrame{
 			stats.adjust();
 		}
 		catch(Exception e1) {}
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_F3)
+			performance = !performance;
+		if(e.getKeyCode() == KeyEvent.VK_F2)
+			dev = !dev;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

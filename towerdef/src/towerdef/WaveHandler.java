@@ -43,7 +43,7 @@ public class WaveHandler {
 				delay-= 3;
 		}
 		if(Main.wave %10 ==0 && !bossAdded) {
-			Main.enemies.add(new Boss(x,y,dir, (Main.wave)*1000));
+			Main.enemies.add(new Boss(x,y,dir, (Main.wave)/2*1000));
 			enemies=0;
 			bossAdded = true;
 		}

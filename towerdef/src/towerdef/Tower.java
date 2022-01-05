@@ -111,8 +111,10 @@ public abstract class Tower extends Entity{
 
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		//drawRange(g2, true);
-		//drawAim(g);
+		if(Main.dev) {
+			drawRange(g2, true);
+			drawAim(g);
+		}
 		////To be implemented
 
 		for(int i = 0; i < projectiles.size();i++) {
