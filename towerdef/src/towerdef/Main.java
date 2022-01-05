@@ -192,7 +192,7 @@ public class Main extends JFrame implements KeyListener{
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
-				//try {Thread.sleep(100);}catch(Exception e) {};
+				try {Thread.sleep(10);}catch(Exception e) {};
 
 				draw(g);
 				frames++;
@@ -204,6 +204,8 @@ public class Main extends JFrame implements KeyListener{
 				}
 				g.drawString(FPS+ " FPS", winWidth-140, 10);
 				repaint();
+				g.dispose();
+				Toolkit.getDefaultToolkit().sync();
 			} 
 		};
 		game.setDoubleBuffered(true);
