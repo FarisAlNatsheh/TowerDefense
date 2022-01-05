@@ -23,17 +23,18 @@ public class Menu {
 		initializeTexture();
 		setUpComponents();
 	}
-	void death(Graphics g) {
+	public void death(Graphics g) {
+		Main.targetTPS = 60;
 		Graphics2D g2 = (Graphics2D) g;
 		if(Main.tick % 10 == 0)
 			anim++;
 		if(anim == 16)
 			anim = 0;
-		g2.drawImage(bldTexture[anim], 0, 0, Main.winWidth+Main.tileWidth*4, Main.winHeight,null);
+		//g2.drawImage(bldTexture[anim], 0, 0, Main.winWidth+Main.tileWidth*4, Main.winHeight,null);
 		Main.builder.drawString(g2, "YOU DIED", (Main.winWidth+Main.tileWidth*4)/2-4*size, Main.winHeight/2-50, size);
 		components[3].draw(g);
 	}
-	void mainMenu(Graphics g) {
+	public void mainMenu(Graphics g) {
 		g.drawImage(Main.menuBack,0,0,Main.winWidth, Main.winHeight, null);
 		//Main.builder.drawString(g, "MINDMATE", Main.winWidth/2- Main.tileWidth*4, Main.winHeight/2-Main.tileHeight*4, Main.tileWidth);
 		Main.builder.drawString(g, "TOWER DEFENSE", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*3, Main.tileWidth);
@@ -41,7 +42,7 @@ public class Menu {
 			components[i].draw(g);
 		components[4].draw(g);
 	}
-	void settings(Graphics g) {
+	public void settings(Graphics g) {
 		g.drawImage(Main.menuBack,0,0,Main.winWidth, Main.winHeight, null);
 		Main.builder.drawString(g, "Game Settings", Main.winWidth/2- Main.tileWidth*6, Main.winHeight/2-Main.tileHeight*5, Main.tileWidth);
 

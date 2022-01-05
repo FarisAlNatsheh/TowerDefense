@@ -6,7 +6,7 @@ public class WaveHandler {
 	static int prevEnemies = 1;
 	static double healthAddition;
 	boolean bossAdded;
-	int delay = 50;
+	static int delay = 50;
 	public WaveHandler(int x, int y, int dir) {
 		this.x = x;
 		this.y = y;

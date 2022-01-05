@@ -40,14 +40,15 @@ public class StatWindow extends Component{
 
 	}
 	public void draw(Graphics g) {
-		g.setColor(new Color(20,20,70));
-		g.fillRect(x*Main.tileWidth, y*Main.tileHeight, width, height);
-		g.drawImage(texture,x*Main.tileWidth, y*Main.tileHeight, width, height, null);
-		upgrade.draw(g);
-		sell.draw(g);
-		Main.builder.drawString(g, "Price: "+ Main.towers.get(selectedTower-1).price/2, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight,Main.tileWidth/5);
-		Main.builder.drawString(g, "Damage: "+ Main.towers.get(selectedTower-1).hitCount, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight+Main.tileHeight/2,Main.tileWidth/5);
-
+		if(visible && Main.menuSwitch == 1) {
+			g.setColor(new Color(20,20,70));
+			g.fillRect(x*Main.tileWidth, y*Main.tileHeight, width, height);
+			g.drawImage(texture,x*Main.tileWidth, y*Main.tileHeight, width, height, null);
+			upgrade.draw(g);
+			sell.draw(g);
+			Main.builder.drawString(g, "Price: "+ Main.towers.get(selectedTower-1).price/2, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight,Main.tileWidth/5);
+			Main.builder.drawString(g, "Damage: "+ Main.towers.get(selectedTower-1).hitCount, (x+1)*Main.tileWidth,(y+2)*Main.tileHeight+Main.tileHeight/2,Main.tileWidth/5);
+		}
 	}
 	public void click(int mouseX, int mouseY, int selectedTower) {
 		if(selectedTower > 0) {
@@ -82,14 +83,14 @@ public class StatWindow extends Component{
 				mouseY-Main.barLength > sell.y &&
 				mouseY-Main.barLength <= sell.y+sell.size+Main.tileWidth/4) {
 			sell.hold();
-		
+
 		}
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
 				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4) {
 			upgrade.hold();
-		
+
 		}
 	}
 	public void release(int mouseX, int mouseY) {
@@ -98,14 +99,14 @@ public class StatWindow extends Component{
 				mouseY-Main.barLength > sell.y &&
 				mouseY-Main.barLength <= sell.y+sell.size+Main.tileWidth/4) {
 			sell.release();
-		
+
 		}
 		if(mouseX > upgrade.x &&
 				mouseX <= upgrade.x + upgrade.size*(upgrade.s.length()+2) &&
 				mouseY-Main.barLength > upgrade.y &&
 				mouseY-Main.barLength <= upgrade.y+upgrade.size+Main.tileWidth/4) {
 			upgrade.release();
-		
+
 		}
 	}
 

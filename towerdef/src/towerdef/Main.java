@@ -33,7 +33,7 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class Main extends JFrame implements KeyListener{
 	static int reAdjust = 0;
-	
+
 	static int mouseX;
 	static int mouseY;
 	//Mouse location on screen
@@ -82,10 +82,10 @@ public class Main extends JFrame implements KeyListener{
 	static long startTime, startTime2 = System.nanoTime();
 	static int delay;
 
-	static int targetTPS = 70;
+	static int targetTPS = 60;
 	static boolean toggleFullscreen = false, performance, dev;
 	//delay before each frame (how often should the program tick)
-	
+
 	Menu menu;
 	WaveHandler waveHandler;
 	static int menuSwitch = 3; //Menu switch
@@ -93,7 +93,7 @@ public class Main extends JFrame implements KeyListener{
 	//2 death
 	//3 menu
 	//4 settings
-	
+
 	static int towerSelection = 0;
 	static int barLength = 31;
 	boolean fullscreen;
@@ -104,6 +104,7 @@ public class Main extends JFrame implements KeyListener{
 	static double frames;
 	static int FPS;
 	Color bgColor= new Color(6,18,33);
+
 	public Main() {
 		vol =-80 + 70/100.0 * 86;
 		volumeEff =-80 +70/100.0 * 86;
@@ -130,7 +131,7 @@ public class Main extends JFrame implements KeyListener{
 				mouseYi = e.getY();
 				if(menuSwitch == 1) {
 					menu.gameClick(mouseXi, mouseYi, e);
-						stats.animate(mouseXi, mouseYi);
+					stats.animate(mouseXi, mouseYi);
 				}
 				else if(menuSwitch == 2) 
 					menu.deathClick(mouseXi, mouseYi);
@@ -144,7 +145,7 @@ public class Main extends JFrame implements KeyListener{
 				if(menuSwitch == 1) {
 					pauseGame(mouseXi, mouseYi);
 					menu.gameClick(mouseXi, mouseYi, e);
-						stats.click(mouseXi, mouseYi, Main.selectedTower);
+					stats.click(mouseXi, mouseYi, Main.selectedTower);
 				}
 				else if(menuSwitch == 2) 
 					menu.deathClick(mouseXi, mouseYi);
@@ -187,13 +188,13 @@ public class Main extends JFrame implements KeyListener{
 		JPanel game;
 		stats = new StatWindow(13,7);
 		//enemies.add(new Boss(3,0,3));
-	
+
 		game = new JPanel() {
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
 				//try {Thread.sleep(100);}catch(Exception e) {};
-				
+
 				draw(g);
 				frames++;
 				//TPS counter
@@ -208,12 +209,11 @@ public class Main extends JFrame implements KeyListener{
 		};
 		game.setDoubleBuffered(true);
 		add(game);
-		
+
 		setVisible(true);
 	}
 
-	public void draw(Graphics g) {
-
+	public synchronized void draw(Graphics g) {
 		//Game loop
 		switch(menuSwitch) {
 		case 1:
@@ -224,7 +224,7 @@ public class Main extends JFrame implements KeyListener{
 			drawSelection(g);
 			pause.draw(g);
 			//Drawing entities and blocks
-			
+
 			builder.drawString(g, new StringBuilder("Health:").append(playerHealth).toString() , 0, 0, tileWidth/2);
 			builder.drawString(g, new StringBuilder("Money:").append((int)playerMoney).toString() , 10, tileHeight/2, tileWidth/2);
 			builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
@@ -247,23 +247,13 @@ public class Main extends JFrame implements KeyListener{
 			builder.drawString(g, "Faris Al-Natsheh 2022" , 0, winHeight-tileHeight, tileHeight/4);
 			break;
 		}
-		
-
-
-
 		if(song) {
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setColor(new Color(255,0,0,30));
 			g2.fillRect(0, 0, winWidth+tileWidth*4, winHeight);
 		}
-
-		
-		
-
-
-
 	} 
-	
+
 	public void drawGrid(Graphics g) {
 		g.setColor(bgColor);
 		g.fillRect(0, 0, winWidth, winHeight);
@@ -303,20 +293,22 @@ public class Main extends JFrame implements KeyListener{
 			if(k != null)
 				k.draw(g);
 		}
-
-		if(selectedTower != 0)
-			towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
+		try {
+			if(selectedTower != 0)
+				towers.get(selectedTower-1).drawRange((Graphics2D)g, true);
+			}
+		catch(Exception c){};
 		//Draw all entities
 
 	}
-	
+
 	public void drawSelection(Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(winWidth, 0, tileWidth*4,winHeight);
 		if(!performance)
 			g.drawImage(selection, winWidth, 0, tileWidth*4,winHeight,null);
-			
-		
+
+
 		g.drawImage(Tower1.texture, winWidth+tileWidth,0 ,tileWidth*2, tileHeight*2,null );
 		builder.drawString(g, "100" , winWidth+tileWidth,tileHeight*2 , tileHeight/2);
 		g.drawImage(Tower2.texture, winWidth+tileWidth,tileHeight*3 ,tileWidth*2, tileHeight*2,null );
@@ -354,10 +346,8 @@ public class Main extends JFrame implements KeyListener{
 	}
 
 	public static void resetGame() {
-		song = false;
 		clip.stop();
 		music("Sound/Songgame.wav");
-		menuSwitch = 1;
 		playerHealth= 100;
 		playerMoney = 100;
 		wave = 1;
@@ -367,17 +357,25 @@ public class Main extends JFrame implements KeyListener{
 		placedTowers = new ArrayList<Dimension>();
 		WaveHandler.enemies = 1;
 		WaveHandler.prevEnemies = 1;
+		WaveHandler.delay = 50;
+		song = false;
+		game = false;
+		selectedTower = 0;
+		stats = new StatWindow(13,7);
+		stats.adjust();
+		reAdjust = 0;
+		menuSwitch = 1;
 	}
 
 	public synchronized void game() {
 		//Run each tick
 		game = true;
 		//reAdjust();
-			if(reAdjust < 5) {
-				reAdjust();
-				reAdjust++;
-			}
-		
+		if(reAdjust < 5) {
+			reAdjust();
+			reAdjust++;
+		}
+
 		checkCollisions();
 		if(playerHealth <= 50) {
 			if(!song) {
@@ -446,26 +444,25 @@ public class Main extends JFrame implements KeyListener{
 			if(k.width == mouseX && k.height == mouseY)
 				return;
 		}
-		try {
-			if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2  && towerSelection != 0) {
-				Tower tower = null;
-				if(towerSelection == 1)
-					tower = new Tower1(mouseX, mouseY);
-				if(towerSelection == 2)
-					tower = new Tower2(mouseX, mouseY);
-				if(towerSelection == 3)
-					tower = new Tower3(mouseX, mouseY);
-				if(tower.price <= playerMoney) {
-					towers.add(tower);
-					placedTowers.add(new Dimension(mouseX, mouseY));
-					towerSelection = 0;
-					playerMoney-=tower.price;
+			if(mouseX < gridWidth && mouseY < gridHeight)
+				if(map[mouseX][mouseY] != 1 && map[mouseX][mouseY] != 2  && towerSelection != 0) {
+					Tower tower = null;
+					if(towerSelection == 1)
+						tower = new Tower1(mouseX, mouseY);
+					if(towerSelection == 2)
+						tower = new Tower2(mouseX, mouseY);
+					if(towerSelection == 3)
+						tower = new Tower3(mouseX, mouseY);
+					if(tower.price <= playerMoney) {
+						towers.add(tower);
+						placedTowers.add(new Dimension(mouseX, mouseY));
+						towerSelection = 0;
+						playerMoney-=tower.price;
+					}
 				}
-			}
-			else
-				towerSelection = 0;
-		}
-		catch(Exception e1) {};
+				else
+					towerSelection = 0;
+		
 	}
 
 	public void setFullscreen() {
@@ -485,71 +482,75 @@ public class Main extends JFrame implements KeyListener{
 			barLength = 31;
 		}
 	}
-	
-	@SuppressWarnings("static-access")
-	
+
 	public static int rand(int min, int max) {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
 	}
 
 	public void checkCollisions() {
-		
-		try {
-			for(int i = 0; i < enemies.size();i++) { 
-				for(int k = 0; k < towers.size(); k++)
-					for(int j = 0; j < towers.get(k).projectiles.size();j++) {
-						Enemy obj = enemies.get(i);
-						if(towers.get(k).projectiles.get(j).x >= obj.X*tileWidth+obj.animX-towers.get(k).projectiles.get(j).width && 
-								towers.get(k).projectiles.get(j).x <= obj.X*tileWidth+obj.animX+tileWidth)
-							if(towers.get(k).projectiles.get(j).y >= obj.Y*tileHeight+obj.animY-towers.get(k).projectiles.get(j).height && 
-							towers.get(k).projectiles.get(j).y <= obj.Y*tileHeight+obj.animY+tileHeight) {
+		for(int i = 0; i < enemies.size();i++) { 
+			for(int k = 0; k < towers.size(); k++)
+				for(int j = 0; j < towers.get(k).projectiles.size();j++) {
+					Enemy obj = enemies.get(i);
+					if(towers.get(k).projectiles.get(j).x >= obj.X*tileWidth+obj.animX-towers.get(k).projectiles.get(j).width && 
+							towers.get(k).projectiles.get(j).x <= obj.X*tileWidth+obj.animX+tileWidth)
+						if(towers.get(k).projectiles.get(j).y >= obj.Y*tileHeight+obj.animY-towers.get(k).projectiles.get(j).height && 
+						towers.get(k).projectiles.get(j).y <= obj.Y*tileHeight+obj.animY+tileHeight) {
+							if(enemies.get(i).health <= 1) { 
+								//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
+								enemies.set(i, null);
+								enemies.remove(i);
+								i--;
+								Boss.playing = false;
+								playerMoney+=Enemy.value;
+								return;
+							}
+							else {
+								enemies.get(i).health-= towers.get(k).projectiles.get(j).damage;
 								if(enemies.get(i).health <= 1) { 
 									//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
 									enemies.set(i, null);
 									enemies.remove(i);
+									i--;
 									Boss.playing = false;
 									playerMoney+=Enemy.value;
+									return;
 								}
-								else {
-									enemies.get(i).health-= towers.get(k).projectiles.get(j).damage;
-									if(enemies.get(i).health <= 1) { 
-										//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
-										enemies.set(i, null);
-										enemies.remove(i);
-										Boss.playing = false;
-										playerMoney+=Enemy.value;
-									}
-								}
-								if(towers.get(k).projectiles.get(j).pierce <= 1) {
-									towers.get(k).projectiles.set(j, null);
-									towers.get(k).projectiles.remove(j);
-								}
-								else 
-									towers.get(k).projectiles.get(j).pierce--;
-
-								towers.get(k).incCount();;
 							}
-						//Check the collisions between the midpoints of the projectile and the enemy
+							if(towers.get(k).projectiles.get(j).pierce <= 1) {
+								towers.get(k).projectiles.set(j, null);
+								towers.get(k).projectiles.remove(j);
+								j--;
+								break;
+							}
+							else {
+								towers.get(k).projectiles.get(j).pierce--;
+							}
 
-						if(towers.get(k).projectiles.get(j).x > winWidth 
-								|| towers.get(k).projectiles.get(j).y > winHeight
-								|| towers.get(k).projectiles.get(j).x < 0
-								|| towers.get(k).projectiles.get(j).y < 0) {
-							towers.get(k).projectiles.set(j, null);
-							towers.get(k).projectiles.remove(j);
+							towers.get(k).incCount();;
+							break;
 						}
-					}
-				if(map[enemies.get(i).X][enemies.get(i).Y] == 2) {
-					playerHealth-= enemies.get(i).damage;
-					enemies.set(i, null);
-					enemies.remove(i);
-					Boss.playing = false;
-				} 
-				//remove enemies if they go to the marked spot
-			}
-		}
-		catch(Exception c) {
+					//Check the collisions between the midpoints of the projectile and the enemy
 
+					if(towers.get(k).projectiles.get(j).x > winWidth 
+							|| towers.get(k).projectiles.get(j).y > winHeight
+							|| towers.get(k).projectiles.get(j).x < 0
+							|| towers.get(k).projectiles.get(j).y < 0) {
+						towers.get(k).projectiles.set(j, null);
+						towers.get(k).projectiles.remove(j);
+						j--;
+						break;
+					}
+				}
+			if(map[enemies.get(i).X][enemies.get(i).Y] == 2) {
+				playerHealth-= enemies.get(i).damage;
+				enemies.set(i, null);
+				enemies.remove(i);
+				i--;
+				Boss.playing = false;
+				break;
+			} 
+			//remove enemies if they go to the marked spot
 		}
 	} 
 
@@ -674,11 +675,16 @@ public class Main extends JFrame implements KeyListener{
 			stats.adjust();
 		}
 		catch(Exception e1) {}
-		
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_F4)
+			if(targetTPS != 60)
+				targetTPS = 60;
+			else
+				targetTPS = 120;
 		if(e.getKeyCode() == KeyEvent.VK_F3)
 			performance = !performance;
 		if(e.getKeyCode() == KeyEvent.VK_F2)
@@ -688,13 +694,13 @@ public class Main extends JFrame implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
