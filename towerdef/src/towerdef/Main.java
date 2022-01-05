@@ -6,7 +6,6 @@ package towerdef;
 //credit dklon for laser sound 
 //Link To mobeyee.com laser
 import java.awt.*;
-import java.awt.RenderingHints.Key;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
