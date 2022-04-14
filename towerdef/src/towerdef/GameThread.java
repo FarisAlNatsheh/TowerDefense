@@ -1,6 +1,6 @@
 package towerdef;
 
-public class GameThread implements Runnable{
+public class GameThread extends Thread{
 	double startTime = System.nanoTime();
 	double startTime2 = System.nanoTime();
 	Main game = new Main();
@@ -24,8 +24,8 @@ public class GameThread implements Runnable{
 	}
 	public static void main(String args[]) {
 		GameThread thread = new GameThread();
-	    //thread.start();
-		thread.run();
+	    thread.start();
+		//thread.run();
 		
 	}
 

@@ -3,8 +3,8 @@ package towerdef;
 import java.awt.Graphics;
 
 public class BloodSpot extends Entity{
-	public int x,y, rotation; 
-	public double animX, animY;
+	private int x,y, rotation; 
+	private double animX, animY;
 	public BloodSpot(int x, int y, double animX, double animY) {
 		this.x = x;
 		this.y = y;

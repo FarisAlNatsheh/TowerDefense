@@ -24,14 +24,14 @@ public class Tower3 extends Tower {
 		//Range option
 		
 		if(target != null) {
-			initialXdif = (target.X)*Main.tileWidth+target.animX+Main.tileWidth/2 - x;
-			initialYdif = (target.Y)*Main.tileHeight+target.animY+Main.tileHeight/2 - y;
-			angle = Math.atan((double)initialYdif/initialXdif);
+			setInitialXdif((target.X)*Main.tileWidth+target.animX+Main.tileWidth/2 - getX());
+			setInitialYdif((target.Y)*Main.tileHeight+target.animY+Main.tileHeight/2 - getY());
+			setAngle(Math.atan((double)getInitialYdif()/getInitialXdif()));
 			//Calculate angle
 			
-			if(Main.tick % speed == 0) {
-				projectiles.add(new Projectile(x,y+Main.tileHeight/8, target, pierce,projType, damage, true,true));
-				projectiles.add(new Projectile(x,y+Main.tileHeight/8, target, pierce,projType, damage, false, true)); 
+			if(Main.tick % getSpeed() == 0) {
+				getProjectiles().add(new Projectile(getX(),getY()+Main.tileHeight/8, target, getPierce(),getProjType(), getDamage(), true,true));
+				getProjectiles().add(new Projectile(getX(),getY()+Main.tileHeight/8, target, getPierce(),getProjType(), getDamage(), false, true)); 
 			}
 			//Create new projectile at the towers location
 		}

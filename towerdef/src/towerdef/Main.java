@@ -192,8 +192,7 @@ public class Main extends JFrame implements KeyListener{
 			public void paintComponent(Graphics g) {
 				frames = 0;
 				startTime = System.nanoTime();
-				try {Thread.sleep(10);}catch(Exception e) {};
-
+				//try {Thread.sleep(10);}catch(Exception e) {};
 				draw(g);
 				frames++;
 				//TPS counter
@@ -231,7 +230,7 @@ public class Main extends JFrame implements KeyListener{
 			builder.drawString(g, new StringBuilder("Wave:").append(wave).toString() , 10, tileHeight, tileWidth/2);
 
 			//Draw text
-			if(stats.visible)
+			if(stats.isVisible())
 				stats.draw(g);
 			break;
 		case 2:
@@ -334,10 +333,10 @@ public class Main extends JFrame implements KeyListener{
 	}
 
 	public void pauseGame(int x, int y) {
-		if(x > pause.x &&
-				x <= pause.x + pause.size*(pause.s.length()+2) &&
-				y-barLength > pause.y &&
-				y-barLength <= pause.y+pause.size+tileWidth/2) {
+		if(x > pause.getX() &&
+				x <= pause.getX() + pause.getSize()*(pause.getS().length()+2) &&
+				y-barLength > pause.getY() &&
+				y-barLength <= pause.getY()+pause.getSize()+tileWidth/2) {
 			menuSwitch = 4;
 			winWidth = getWidth();
 			winHeight = getHeight();
@@ -398,11 +397,11 @@ public class Main extends JFrame implements KeyListener{
 		//Move enemies
 
 		for(int k = 0; k < towers.size();k++) {
-			for(int i = 0;i< towers.get(k).projectiles.size();i++) {
-				towers.get(k).projectiles.get(i).move();
-				if(towers.get(k).projectiles.get(i).x < 0 || towers.get(k).projectiles.get(i).y < 0) {
-					towers.get(k).projectiles.set(i, null);
-					towers.get(k).projectiles.remove(i);
+			for(int i = 0;i< towers.get(k).getProjectiles().size();i++) {
+				towers.get(k).getProjectiles().get(i).move();
+				if(towers.get(k).getProjectiles().get(i).getX() < 0 || towers.get(k).getProjectiles().get(i).getY() < 0) {
+					towers.get(k).getProjectiles().set(i, null);
+					towers.get(k).getProjectiles().remove(i);
 				}
 			}
 		}
@@ -454,11 +453,11 @@ public class Main extends JFrame implements KeyListener{
 						tower = new Tower2(mouseX, mouseY);
 					if(towerSelection == 3)
 						tower = new Tower3(mouseX, mouseY);
-					if(tower.price <= playerMoney) {
+					if(tower.getPrice() <= playerMoney) {
 						towers.add(tower);
 						placedTowers.add(new Dimension(mouseX, mouseY));
 						towerSelection = 0;
-						playerMoney-=tower.price;
+						playerMoney-=tower.getPrice();
 					}
 				}
 				else
@@ -491,12 +490,12 @@ public class Main extends JFrame implements KeyListener{
 	public void checkCollisions() {
 		for(int i = 0; i < enemies.size();i++) { 
 			for(int k = 0; k < towers.size(); k++)
-				for(int j = 0; j < towers.get(k).projectiles.size();j++) {
+				for(int j = 0; j < towers.get(k).getProjectiles().size();j++) {
 					Enemy obj = enemies.get(i);
-					if(towers.get(k).projectiles.get(j).x >= obj.X*tileWidth+obj.animX-towers.get(k).projectiles.get(j).width && 
-							towers.get(k).projectiles.get(j).x <= obj.X*tileWidth+obj.animX+tileWidth)
-						if(towers.get(k).projectiles.get(j).y >= obj.Y*tileHeight+obj.animY-towers.get(k).projectiles.get(j).height && 
-						towers.get(k).projectiles.get(j).y <= obj.Y*tileHeight+obj.animY+tileHeight) {
+					if(towers.get(k).getProjectiles().get(j).getX() >= obj.X*tileWidth+obj.animX-towers.get(k).getProjectiles().get(j).getWidth() && 
+							towers.get(k).getProjectiles().get(j).getX() <= obj.X*tileWidth+obj.animX+tileWidth)
+						if(towers.get(k).getProjectiles().get(j).getY() >= obj.Y*tileHeight+obj.animY-towers.get(k).getProjectiles().get(j).getHeight() && 
+						towers.get(k).getProjectiles().get(j).getY() <= obj.Y*tileHeight+obj.animY+tileHeight) {
 							if(enemies.get(i).health <= 1) { 
 								//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
 								enemies.set(i, null);
@@ -507,7 +506,7 @@ public class Main extends JFrame implements KeyListener{
 								return;
 							}
 							else {
-								enemies.get(i).health-= towers.get(k).projectiles.get(j).damage;
+								enemies.get(i).health-= towers.get(k).getProjectiles().get(j).getDamage();
 								if(enemies.get(i).health <= 1) { 
 									//bloodSpots.add(new BloodSpot(enemies.get(i).X,enemies.get(i).Y,enemies.get(i).animX,enemies.get(i).animY));
 									enemies.set(i, null);
@@ -518,14 +517,14 @@ public class Main extends JFrame implements KeyListener{
 									return;
 								}
 							}
-							if(towers.get(k).projectiles.get(j).pierce <= 1) {
-								towers.get(k).projectiles.set(j, null);
-								towers.get(k).projectiles.remove(j);
+							if(towers.get(k).getProjectiles().get(j).getPierce() <= 1) {
+								towers.get(k).getProjectiles().set(j, null);
+								towers.get(k).getProjectiles().remove(j);
 								j--;
 								break;
 							}
 							else {
-								towers.get(k).projectiles.get(j).pierce--;
+								towers.get(k).getProjectiles().get(j).setPierce(towers.get(k).getProjectiles().get(j).getPierce() - 1);
 							}
 
 							towers.get(k).incCount();;
@@ -533,12 +532,12 @@ public class Main extends JFrame implements KeyListener{
 						}
 					//Check the collisions between the midpoints of the projectile and the enemy
 
-					if(towers.get(k).projectiles.get(j).x > winWidth 
-							|| towers.get(k).projectiles.get(j).y > winHeight
-							|| towers.get(k).projectiles.get(j).x < 0
-							|| towers.get(k).projectiles.get(j).y < 0) {
-						towers.get(k).projectiles.set(j, null);
-						towers.get(k).projectiles.remove(j);
+					if(towers.get(k).getProjectiles().get(j).getX() > winWidth 
+							|| towers.get(k).getProjectiles().get(j).getY() > winHeight
+							|| towers.get(k).getProjectiles().get(j).getX() < 0
+							|| towers.get(k).getProjectiles().get(j).getY() < 0) {
+						towers.get(k).getProjectiles().set(j, null);
+						towers.get(k).getProjectiles().remove(j);
 						j--;
 						break;
 					}
@@ -663,10 +662,10 @@ public class Main extends JFrame implements KeyListener{
 		tileWidth = winWidth/gridWidth;
 		pause = new Button(tileWidth/4,winHeight-tileHeight*2,"Pause",tileWidth/4);
 		for(Tower k : towers) {
-			k.width = Main.tileWidth;
-			k.height = Main.tileHeight;
-			k.x = k.mapX * Main.tileWidth+Main.tileWidth/2;
-			k.y = k.mapY * Main.tileHeight+Main.tileHeight/2;
+			k.setWidth(Main.tileWidth);
+			k.setHeight(Main.tileHeight);
+			k.setX(k.getMapX() * Main.tileWidth+Main.tileWidth/2);
+			k.setY(k.getMapY() * Main.tileHeight+Main.tileHeight/2);
 		}
 		for(Enemy k : enemies) {
 			k.readjust();

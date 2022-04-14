@@ -6,10 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class Enemy extends Entity{
-	public int X, Y, dir, health, textureDir = 10, maxHealth, damage;
-	public double  animX, animY, anim, speedX, speedY;
-	public BufferedImage texture = Main.enemyTexture[0];
-	int type;
+	protected int X, Y, dir;
+	protected int health;
+	private int textureDir = 10;
+	protected int maxHealth;
+	protected int damage;
+	protected double  animX, animY, anim, speedX, speedY;
+	protected BufferedImage texture = Main.enemyTexture[0];
+	private int type;
 	static double value = 5;
 	//Texture & Movement flags directions
 

@@ -8,9 +8,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class TextBuilder {
-	BufferedImage[][] textures;
-	BufferedImage[] letters = new BufferedImage[26];
-	BufferedImage[] numbers = new BufferedImage[10];
+	private BufferedImage[][] textures;
+	private BufferedImage[] letters = new BufferedImage[26];
+	private BufferedImage[] numbers = new BufferedImage[10];
 
 	public TextBuilder() {
 		BufferedImage sheet = null;

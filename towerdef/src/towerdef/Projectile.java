@@ -15,22 +15,22 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
 public class Projectile extends Entity{
-	public double x,y,mapX, mapY;
-	Enemy target;
-	double speedX = Main.tileWidth/2, speedY= Main.tileHeight/2;
-	double initialXdif;
-	double initialYdif;
-	double angle;
-	int pierce;
-	int type;
-	int width = Main.tileHeight/2;
-	int height = Main.tileWidth/6;
-	int damage;
-	AudioInputStream stream;
-	AudioFormat format;
-	DataLine.Info info;
-	Clip clip;
-	boolean left, doubleShot;
+	private double x,y,mapX, mapY;
+	private Enemy target;
+	private double speedX = Main.tileWidth/2, speedY= Main.tileHeight/2;
+	private double initialXdif;
+	private double initialYdif;
+	private double angle;
+	private int pierce;
+	private int type;
+	private int width = Main.tileHeight/2;
+	private int height = Main.tileWidth/6;
+	private int damage;
+	private AudioInputStream stream;
+	private AudioFormat format;
+	private DataLine.Info info;
+	private Clip clip;
+	private boolean left, doubleShot;
 	public Projectile(double x, double y, Enemy target, int pierce, int type, int damage, boolean left, boolean doubleShot) {
 		this.doubleShot = doubleShot;
 		this.left = left;
@@ -44,7 +44,7 @@ public class Projectile extends Entity{
 		angle = Math.atan((double)initialYdif/initialXdif);
 
 		//Calcualtes the angle between projectile and targeted enemy
-		this.pierce = pierce;
+		this.setPierce(pierce);
 		if(type == 0) {
 			speedX = Main.tileWidth/2;
 			speedY= Main.tileHeight/2;
@@ -98,16 +98,16 @@ public class Projectile extends Entity{
 			}
 		}
 		if(initialYdif < 0) {
-			y -= Math.abs(sin);
+			y = getY() - Math.abs(sin);
 		}
 		else {
-			y += Math.abs(sin);
+			y = getY() + Math.abs(sin);
 		}
 		if(initialXdif < 0) {
-			x -= Math.abs(cosine);
+			x = getX() - Math.abs(cosine);
 		}
 		else {
-			x += Math.abs(cosine);
+			x = getX() + Math.abs(cosine);
 		}
 		//Move based on angle
 	}
@@ -115,24 +115,45 @@ public class Projectile extends Entity{
 		if(doubleShot) {
 			if(left) {
 				Graphics2D g2 = (Graphics2D) g;
-				g2.rotate(angle , x+Main.tileWidth/4,y- height/2);
-				g2.drawImage(Main.projectileImg,(int)x+Main.tileWidth/4-width/2, (int)y- height/2, width, height,null);
-				g2.rotate(angle * -1, x+Main.tileWidth/4,y- height/2);
+				g2.rotate(angle , getX()+Main.tileWidth/4,getY()- getHeight()/2);
+				g2.drawImage(Main.projectileImg,(int)getX()+Main.tileWidth/4-getWidth()/2, (int)getY()- getHeight()/2, getWidth(), getHeight(),null);
+				g2.rotate(angle * -1, getX()+Main.tileWidth/4,getY()- getHeight()/2);
 			}
 			else {
 				Graphics2D g2 = (Graphics2D) g;
-				g2.rotate(angle , x-Main.tileWidth/4,y- height/2);
-				g2.drawImage(Main.projectileImg,(int)x-Main.tileWidth/4-width/2, (int)y- height/2, width, height,null);
-				g2.rotate(angle * -1, x-Main.tileWidth/4,y- height/2);
+				g2.rotate(angle , getX()-Main.tileWidth/4,getY()- getHeight()/2);
+				g2.drawImage(Main.projectileImg,(int)getX()-Main.tileWidth/4-getWidth()/2, (int)getY()- getHeight()/2, getWidth(), getHeight(),null);
+				g2.rotate(angle * -1, getX()-Main.tileWidth/4,getY()- getHeight()/2);
 			}
 			return;
 		}
 		Graphics2D g2 = (Graphics2D) g;
-		g2.rotate(angle , x,y- height/2);
-		g2.drawImage(Main.projectileImg,(int)x-width/2, (int)y- height/2, width, height,null);
-		g2.rotate(angle * -1, x,y- height/2);
+		g2.rotate(angle , getX(),getY()- getHeight()/2);
+		g2.drawImage(Main.projectileImg,(int)getX()-getWidth()/2, (int)getY()- getHeight()/2, getWidth(), getHeight(),null);
+		g2.rotate(angle * -1, getX(),getY()- getHeight()/2);
 
 
 	}
 	//Draw projectile based on rotation
+	public double getY() {
+		return y;
+	}
+	public double getX() {
+		return x;
+	}
+	public int getDamage() {
+		return damage;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public int getPierce() {
+		return pierce;
+	}
+	public void setPierce(int pierce) {
+		this.pierce = pierce;
+	}
 }

@@ -8,9 +8,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Button extends Component{
-	int x,y,size;
-	String s;
-	BufferedImage texture;
+	private int x,y,size;
+	private String s;
+	private BufferedImage texture;
+	
 	public Button(int x, int y, String s, int size) {
 		this.x = x;
 		this.y = y;
@@ -28,8 +29,8 @@ public class Button extends Component{
 	}
 	
 	public void draw(Graphics g){
-		g.drawImage(texture,x,y,size*(s.length()+2),size+Main.tileWidth/2,null);
-		Main.builder.drawString(g, s, x+size, y+Main.tileWidth/4, size);
+		g.drawImage(texture,getX(),getY(),getSize()*(getS().length()+2),getSize()+Main.tileWidth/2,null);
+		Main.builder.drawString(g, getS(), getX()+getSize(), getY()+Main.tileWidth/4, getSize());
 	}
 	public void hold() {
 			try {
@@ -46,5 +47,17 @@ public class Button extends Component{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public int getSize() {
+		return size;
+	}
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public String getS() {
+		return s;
 	}
 }

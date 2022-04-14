@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 
 public class Boss extends Enemy{
 	static boolean playing;
-	int bossH;
+	private int bossH;
 	public Boss(int startX, int startY, int startDir, int health) {
 		super(startX, startY, startDir, 3);
 		bossH = health;
